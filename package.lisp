@@ -1,4 +1,6 @@
 (defpackage #:tswr-asteroids
   (:use #:cl
-        #:alexandria))
+        #:alexandria)
+
+  (:export #:run))
 
