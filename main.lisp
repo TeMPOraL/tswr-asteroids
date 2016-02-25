@@ -25,7 +25,11 @@
 
 (defmethod p2d:on-render ((game asteroids-game))
   ;; draw stuff
-  )
+
+  (gl:clear :color-buffer)
+
+  (gl:flush)
+  (sdl2:gl-swap-window p2d:*main-window*))
 
 (defun run ()
   (p2d:run (make-instance 'asteroids-game)))
