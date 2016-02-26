@@ -22,9 +22,10 @@
 (defmethod p2d:deinitialize ((game asteroids-game))
   (log:info "TSWR - Asteroids game deinit."))
 
-(defmethod p2d:on-key-event ((game asteroids-game) key state)
+(defmethod p2d:on-key-event ((game asteroids-game) key state repeat)
+  (declare (ignore repeat))
   (let ((key-code (sdl2:scancode-symbol (sdl2:scancode-value key))))
-    (log:trace key state key-code)
+    (log:trace key state key-code repeat)
     (case key-code
       (:scancode-up (setf *ship-vy* (if (sdl2:key-down-p state) 1 0.0)))
       (:scancode-down (setf *ship-vy* (if (sdl2:key-down-p state) -1 0.0)))
