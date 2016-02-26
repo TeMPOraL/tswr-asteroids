@@ -17,7 +17,8 @@
   (log:info "TSWR - Asteroids game deinit."))
 
 (defmethod p2d:on-key-event ((game asteroids-game) key state)
-  (log:info key state (sdl2:scancode-symbol (sdl2:scancode-value key))))
+  (log:info key state (sdl2:scancode-symbol (sdl2:scancode-value key)))
+  (sdl2:push-event :quit))
 
 (defmethod p2d:on-tick ((game asteroids-game) dt)
   ;; TICK
