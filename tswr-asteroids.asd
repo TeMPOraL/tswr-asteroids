@@ -23,4 +23,8 @@
   :components ((:file "package")
                (:file "version")
 
+               (:module "entities"
+                        :components ((:file "entity")
+                                     (:file "asteroid")
+                                     (:file "ship")))
                (:file "main")))

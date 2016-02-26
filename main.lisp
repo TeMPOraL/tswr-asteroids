@@ -1,14 +1,15 @@
 (in-package #:tswr-asteroids)
 
-(defparameter *ship-x* 0)
-(defparameter *ship-y* 0)
-(defparameter *ship-vx* 0)
-(defparameter *ship-vy* 0)
-(defparameter *ship-rot* 0)
-(defparameter *ship-vrot* 0)
-
 (defclass asteroids-game (p2d:game)
   ())
+
+(defparameter *player-ship* (make-instance 'ship
+                                           :position (p2dm:make-vector-2d 400.0 300.0)
+                                           :color (p2dm:make-vector-4d 0.0 1.0 0.0 1.0)))
+
+(defparameter *asteroids* (list (make-instance 'asteroid
+                                               :position (p2dm:make-vector-2d 100.0 100.0)
+                                               :color (p2dm:make-vector-4d 1.0 1.0 1.0 1.0))))
 
 (defmethod p2d:preinit ((game asteroids-game))
   ;; TODO preconfiguration (if any)
@@ -24,27 +25,33 @@
 
 (defmethod p2d:on-key-event ((game asteroids-game) key state repeat)
   (declare (ignore repeat))
-  (let ((key-code (sdl2:scancode-symbol (sdl2:scancode-value key))))
-    (log:trace key state key-code repeat)
-    (case key-code
-      (:scancode-up (setf *ship-vy* (if (sdl2:key-down-p state) 1 0.0)))
-      (:scancode-down (setf *ship-vy* (if (sdl2:key-down-p state) -1 0.0)))
-      (:scancode-left (setf *ship-vrot* (if (sdl2:key-down-p state) -180 0.0)))
-      (:scancode-right (setf *ship-vrot* (if (sdl2:key-down-p state) 180 0.0)))
-      (t nil))
+  (with-slots (velocity angular-velocity) *player-ship*
+    (let ((key-code (sdl2:scancode-symbol (sdl2:scancode-value key))))
+      (log:trace key state key-code repeat)
+      (case key-code
+        (:scancode-up (setf (p2dm:vec-y velocity) (if (sdl2:key-down-p state) 200.0 0.0)))
+        (:scancode-down (setf (p2dm:vec-y velocity) (if (sdl2:key-down-p state) -200.0 0.0)))
+        (:scancode-left (setf angular-velocity (if (sdl2:key-down-p state) -180.0 0.0)))
+        (:scancode-right (setf angular-velocity (if (sdl2:key-down-p state) 180.0 0.0)))
+        (t nil))
 
-    (when (eql key-code :scancode-escape)
-      (sdl2:push-event :quit))))
+      (when (eql key-code :scancode-escape)
+        (sdl2:push-event :quit)))))
 
 (defmethod p2d:on-tick ((game asteroids-game) dt)
-  (update-ship dt))
+  (update-motion *player-ship* dt)
+  (mapc (lambda (entity)
+          (update-motion entity dt))
+        *asteroids*))
 
 (defmethod p2d:on-render ((game asteroids-game))
   ;; draw stuff
 
   (gl:clear :color-buffer)
+  (gl:load-identity)
 
-  (draw-ship)
+  (render *player-ship*)
+  (mapc #'render *asteroids*)
 
   (gl:flush)
   (sdl2:gl-swap-window p2d:*main-window*))
@@ -54,20 +61,7 @@
 
 
 ;;; game
-(defun update-ship (dt)
-  (incf *ship-x* (* *ship-vx* dt))
-  (incf *ship-y* (* *ship-vy* dt))
-
-  (setf *ship-rot* (mod (+ *ship-rot* (* *ship-vrot* dt))
-                        360)))
 
 (defun draw-ship ()
-  (gl:load-identity)
-  (gl:translate *ship-x* *ship-y* 0)
-  (gl:rotate *ship-rot* 0 0 1)
 
-  (gl:with-primitive :triangles
-    (gl:color 1.0 0.0 0.0)
-    (gl:vertex 0.0 0.1)
-    (gl:vertex -0.07 -0.1)
-    (gl:vertex 0.07 -0.1)))
+)
