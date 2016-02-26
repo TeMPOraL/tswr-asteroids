@@ -26,5 +26,6 @@
                (:module "entities"
                         :components ((:file "entity")
                                      (:file "asteroid")
+                                     (:file "bullet")
                                      (:file "ship")))
                (:file "main")))

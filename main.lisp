@@ -9,7 +9,11 @@
 
 (defparameter *asteroids* (list (make-instance 'asteroid
                                                :position (p2dm:make-vector-2d 100.0 100.0)
+                                               :velocity (p2dm:make-vector-2d (* 100 (p2dm:random-float -1.0 1.0)) (* 100 (p2dm:random-float -1.0 1.0)))
+                                               :angular-velocity (p2dm:random-float -100 100)
                                                :color (p2dm:make-vector-4d 1.0 1.0 1.0 1.0))))
+
+(defparameter *bullets* '())
 
 (defmethod p2d:preinit ((game asteroids-game))
   ;; TODO preconfiguration (if any)
@@ -26,7 +30,7 @@
 (defmethod p2d:on-key-event ((game asteroids-game) key state repeat)
   (declare (ignore repeat))
   
-  (with-slots (acceleration angular-velocity orientation) *player-ship*
+  (with-slots (position acceleration angular-velocity orientation) *player-ship*
     (let ((key-code (sdl2:scancode-symbol (sdl2:scancode-value key)))
           (direction (p2dm:rotated-vector-2d (p2dm:make-vector-2d 0.0 1.0) (p2dm:deg->rad orientation))))
       (log:trace key state key-code repeat)
@@ -36,18 +40,26 @@
         (:scancode-down (setf acceleration (p2dm:scaled-vector direction (if (sdl2:key-down-p state) -100.0 0.0))))
         (:scancode-left (setf angular-velocity (if (sdl2:key-down-p state) 180.0 0.0)))
         (:scancode-right (setf angular-velocity (if (sdl2:key-down-p state) -180.0 0.0)))
+        (:scancode-space (shoot-bullet position direction))
         (t nil))
 
       (when (eql key-code :scancode-escape)
         (sdl2:push-event :quit)))))
 
 (defmethod p2d:on-tick ((game asteroids-game) dt)
-  (update-motion *player-ship* dt)
-  (mapc (lambda (entity)
-          (update-motion entity dt))
-        *asteroids*)
+  (mapc (lambda (ent)
+          (update-motion ent dt))
+        (append (list  *player-ship*) *asteroids* *bullets*))
 
-  (mapc #'wrap-into-play-area (append *asteroids* (list *player-ship*))))
+  (mapc (lambda (ent)
+          (update-logic ent dt))
+        (append (list  *player-ship*) *asteroids* *bullets*))
+  
+  ;; TODO process collisions & stuff
+
+  (setf *bullets* (delete-if #'deadp *bullets*))
+  
+  (mapc #'wrap-into-play-area (append *asteroids* *bullets* (list *player-ship*))))
 
 (defmethod p2d:on-render ((game asteroids-game))
   ;; draw stuff
@@ -57,6 +69,7 @@
 
   (render *player-ship*)
   (mapc #'render *asteroids*)
+  (mapc #'render *bullets*)
 
   (gl:flush)
   (sdl2:gl-swap-window p2d:*main-window*))
@@ -70,6 +83,13 @@
   (with-slots (position) object
     (setf (p2dm:vec-x position) (wrap-in-range (p2dm:vec-x position) -1 801)
           (p2dm:vec-y position) (wrap-in-range (p2dm:vec-y position) -1 601))))
+
+(defun shoot-bullet (start-position direction)
+  (push (make-instance 'bullet
+                       :position (p2dm:scaled-vector start-position 1.0)  ;FIXME hack for missing (clone ...) ability
+                       :velocity (p2dm:scaled-vector direction 500)
+                       :color (p2dm:make-vector-4d 1.0 1.0 0.0 1.0)
+                       :life-time 1.5) *bullets*))
 
 ;;; util
 (defun wrap-in-range (x a b)

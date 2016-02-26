@@ -18,17 +18,23 @@
                 :initform p2dm:+standard-float-zero+
                 :type p2dm:standard-float)
    
-   (angular-velocity :initarg angular-velocity
+   (angular-velocity :initarg :angular-velocity
                      :initform p2dm:+standard-float-zero+
                      :type p2dm:standard-float)))
 
 (defgeneric update-motion (entity dt)
-  (:documentation "Upsates the entity's position based on physics parameters."))
+  (:documentation "Updates the entity's position based on physics parameters."))
+
+(defgeneric update-logic (entity dt)
+  (:documentation "Updates the game logic behind this entity."))
+
+(defgeneric deadp (entity)
+  (:documentation "Checks if the entity is dead and thus ready to remove."))
 
 (defgeneric render (entity)
   (:documentation "Renders the entity."))
 
-;;; defaults
+;;; default implementations
 (defmethod update-motion (entity dt)
   (with-slots (position velocity acceleration speed-limit orientation angular-velocity) entity
     (p2dm:add-to-vector position
@@ -41,4 +47,13 @@
                                            speed-limit)))
 
     (incf orientation (* angular-velocity dt))))
+
+(defmethod update-logic (entity dt)
+  nil)
+
+(defmethod render (entity)
+  (error "Not yet implemented, but should be."))
+
+(defmethod deadp (entity)
+  return nil)
 
