@@ -25,14 +25,17 @@
 
 (defmethod p2d:on-key-event ((game asteroids-game) key state repeat)
   (declare (ignore repeat))
-  (with-slots (velocity angular-velocity) *player-ship*
-    (let ((key-code (sdl2:scancode-symbol (sdl2:scancode-value key))))
+  
+  (with-slots (acceleration angular-velocity orientation) *player-ship*
+    (let ((key-code (sdl2:scancode-symbol (sdl2:scancode-value key)))
+          (direction (p2dm:rotated-vector-2d (p2dm:make-vector-2d 0.0 1.0) (p2dm:deg->rad orientation))))
       (log:trace key state key-code repeat)
+      
       (case key-code
-        (:scancode-up (setf (p2dm:vec-y velocity) (if (sdl2:key-down-p state) 200.0 0.0)))
-        (:scancode-down (setf (p2dm:vec-y velocity) (if (sdl2:key-down-p state) -200.0 0.0)))
-        (:scancode-left (setf angular-velocity (if (sdl2:key-down-p state) -180.0 0.0)))
-        (:scancode-right (setf angular-velocity (if (sdl2:key-down-p state) 180.0 0.0)))
+        (:scancode-up (setf acceleration (p2dm:scaled-vector direction (if (sdl2:key-down-p state) 150.0 0.0))))
+        (:scancode-down (setf acceleration (p2dm:scaled-vector direction (if (sdl2:key-down-p state) -100.0 0.0))))
+        (:scancode-left (setf angular-velocity (if (sdl2:key-down-p state) 180.0 0.0)))
+        (:scancode-right (setf angular-velocity (if (sdl2:key-down-p state) -180.0 0.0)))
         (t nil))
 
       (when (eql key-code :scancode-escape)
@@ -42,7 +45,9 @@
   (update-motion *player-ship* dt)
   (mapc (lambda (entity)
           (update-motion entity dt))
-        *asteroids*))
+        *asteroids*)
+
+  (mapc #'wrap-into-play-area (append *asteroids* (list *player-ship*))))
 
 (defmethod p2d:on-render ((game asteroids-game))
   ;; draw stuff
@@ -59,9 +64,13 @@
 (defun run ()
   (p2d:run (make-instance 'asteroids-game)))
 
-
 ;;; game
 
-(defun draw-ship ()
+(defun wrap-into-play-area (object)
+  (with-slots (position) object
+    (setf (p2dm:vec-x position) (wrap-in-range (p2dm:vec-x position) -1 801)
+          (p2dm:vec-y position) (wrap-in-range (p2dm:vec-y position) -1 601))))
 
-)
+;;; util
+(defun wrap-in-range (x a b)
+  (setf x (+ a (mod (- x a) (- b a)))))
