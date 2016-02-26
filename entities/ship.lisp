@@ -15,7 +15,5 @@
 
     (gl:color (p2dm:vec-x color) (p2dm:vec-y color) (p2dm:vec-z color) (p2dm:vec-w color))
 
-    (gl:with-primitive :triangles
-      (gl:vertex 0.0 15.0)
-      (gl:vertex -10.0 -15.0)
-      (gl:vertex 10.0 -15.0))))
+    (gl:scale 10 15 1)
+    (p2dg:draw-triangle)))

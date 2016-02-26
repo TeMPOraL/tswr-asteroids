@@ -15,16 +15,8 @@
                   (p2dm:vec-y position)
                   0.0)
     (gl:rotate orientation 0 0 1)
-    (gl:scale size size 0.0)
+    (gl:scale size size 1.0)
 
     (gl:color (p2dm:vec-x color) (p2dm:vec-y color) (p2dm:vec-z color) (p2dm:vec-w color))
-
-    (gl:with-primitive :line-loop
-      (gl:vertex 10.0 -5.0)
-      (gl:vertex 10.0 5.0)
-      (gl:vertex 5.0 10.0)
-      (gl:vertex -5.0 10.0)
-      (gl:vertex -10.0 5.0)
-      (gl:vertex -10.0 -5.0)
-      (gl:vertex -5.0 -10.0)
-      (gl:vertex 5.0 -10.0))))
+    (gl:scale 10.0 10.0 0)
+    (p2dg:draw-regular-polygon-outline 7)))

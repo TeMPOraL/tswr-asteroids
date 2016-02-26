@@ -22,9 +22,5 @@
                   0.0)
 
     (gl:color (p2dm:vec-x color) (p2dm:vec-y color) (p2dm:vec-z color) (p2dm:vec-w color))
-
-    (gl:with-primitive :line-loop
-      (gl:vertex 5.0 0.0)
-      (gl:vertex 0.0 5.0)
-      (gl:vertex -5.0 0.0)
-      (gl:vertex 0.0 -5.0))))
+    (gl:scale 2.5 2.5 1.0)
+    (p2dg:draw-circle-outline :resolution 16)))
