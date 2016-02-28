@@ -23,9 +23,27 @@
   :components ((:file "package")
                (:file "version")
 
-               (:module "entities"
-                        :components ((:file "entity")
-                                     (:file "asteroid")
+               (:module "components"
+                        :components ((:file "asteroid")
+                                     (:file "buff")
                                      (:file "bullet")
-                                     (:file "ship")))
+                                     (:file "collision-sphere")
+                                     (:file "decays")
+                                     (:file "drops-powerup")
+                                     (:file "gives-score")
+                                     (:file "gun")
+                                     (:file "kinematics")
+                                     (:file "orientation")
+                                     (:file "player-controlled")
+                                     (:file "position")
+                                     (:file "renderable")
+                                     (:file "ship")
+                                     (:file "wraps-around")))
+
+               (:module "entities"
+                        :components ((:file "entity") ;old, remove
+                                     (:file "asteroid") ;old, remove
+                                     (:file "bullet") ;old, remove
+                                     (:file "ship") ;old, remove
+                                     (:file "entity-creator"))) 
                (:file "main")))

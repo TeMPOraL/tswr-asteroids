@@ -1,16 +1,16 @@
 (in-package #:tswr-asteroids)
 
-(defclass asteroid (entity)
+(defclass ~asteroid (entity)
   ((color :initarg :color
           :initform (p2dm:make-vector-4d))
    
    (size :initarg :size
          :initform 4.0)))
 
-(defmethod render ((asteroid asteroid))
+(defmethod render ((~asteroid ~asteroid))
   (gl:load-identity)
 
-  (with-slots (position orientation color size) asteroid
+  (with-slots (position orientation color size) ~asteroid
     (gl:translate (p2dm:vec-x position)
                   (p2dm:vec-y position)
                   0.0)

@@ -1,6 +1,6 @@
 (in-package #:tswr-asteroids)
 
-(defclass bullet (entity)
+(defclass ~bullet (entity)
   ((color :initarg :color
           :initform (p2dm:make-vector-4d 0.0 0.0 0.0 1.0))
    (life-time :initarg :life-time
@@ -8,15 +8,15 @@
    
    (speed-limit :initform 1000)))
 
-(defmethod update-logic ((bullet bullet) dt)
-  (decf (slot-value bullet 'life-time) dt))
+(defmethod update-logic ((~bullet ~bullet) dt)
+  (decf (slot-value ~bullet 'life-time) dt))
 
-(defmethod deadp ((bullet bullet))
-  (<= (slot-value bullet 'life-time) 0.0))
+(defmethod deadp ((~bullet ~bullet))
+  (<= (slot-value ~bullet 'life-time) 0.0))
 
-(defmethod render ((bullet bullet))
+(defmethod render ((~bullet ~bullet))
   (gl:load-identity)
-  (with-slots (position color) bullet
+  (with-slots (position color) ~bullet
     (gl:translate (p2dm:vec-x position)
                   (p2dm:vec-y position)
                   0.0)

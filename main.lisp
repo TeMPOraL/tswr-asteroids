@@ -3,11 +3,11 @@
 (defclass asteroids-game (p2d:game)
   ())
 
-(defparameter *player-ship* (make-instance 'ship
+(defparameter *player-ship* (make-instance '~ship
                                            :position (p2dm:make-vector-2d 400.0 300.0)
                                            :color (p2dm:make-vector-4d 0.0 1.0 0.0 1.0)))
 
-(defparameter *asteroids* (list (make-instance 'asteroid
+(defparameter *asteroids* (list (make-instance '~asteroid
                                                :position (p2dm:make-vector-2d 100.0 100.0)
                                                :velocity (p2dm:make-vector-2d (* 100 (p2dm:random-float -1.0 1.0)) (* 100 (p2dm:random-float -1.0 1.0)))
                                                :angular-velocity (p2dm:random-float -100 100)
@@ -85,7 +85,7 @@
           (p2dm:vec-y position) (wrap-in-range (p2dm:vec-y position) -1 601))))
 
 (defun shoot-bullet (start-position direction)
-  (push (make-instance 'bullet
+  (push (make-instance '~bullet
                        :position (p2dm:scaled-vector start-position 1.0)  ;FIXME hack for missing (clone ...) ability
                        :velocity (p2dm:scaled-vector direction 500)
                        :color (p2dm:make-vector-4d 1.0 1.0 0.0 1.0)

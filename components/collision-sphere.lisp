@@ -1,4 +1,4 @@
 (in-package #:tswr-asteroids)
 
-(defcomponent collision-sphere
+(p2de:defcomponent collision-sphere
   ((radius 1.0)))

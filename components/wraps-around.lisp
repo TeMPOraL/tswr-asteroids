@@ -1,5 +1,5 @@
 (in-package #:tswr-asteroids)
 
-(defcomponent wraps-around
-  (()))
+(p2de:defcomponent wraps-around
+  ())
 
