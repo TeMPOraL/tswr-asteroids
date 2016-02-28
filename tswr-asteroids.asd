@@ -45,5 +45,11 @@
                                      (:file "asteroid") ;old, remove
                                      (:file "bullet") ;old, remove
                                      (:file "ship") ;old, remove
-                                     (:file "entity-creator"))) 
+                                     (:file "entity-creator")))
+
+               (:module "systems"
+                        :components ((:file "basic-physics")
+                                     (:file "game-area-wrapper")
+                                     (:file "decayer")
+                                     (:file "renderer")))
                (:file "main")))

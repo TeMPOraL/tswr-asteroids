@@ -2,7 +2,7 @@
 
 (defparameter *base-asteroid-score* 1000) ;TODO move to game-rules, or sth.
 (defparameter *asteroid-powerup-drop-chance* 0.05) ;TODO move to game-rules, or sth.
-(defparameter *default-ship-size* 20)   ;TODO move to game-rules, or sth.
+(defparameter *default-ship-size* 10)   ;TODO move to game-rules, or sth.
 (defparameter *default-powerup-size* 20)   ;TODO move to game-rules, or sth.
 (defparameter *default-powerup-score* 2000)   ;TODO move to game-rules, or sth.
 (defparameter *default-explosion-life* 1.0)

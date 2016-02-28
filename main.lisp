@@ -22,7 +22,22 @@
 
 (defmethod p2d:initialize ((game asteroids-game))
   (log:info "TSWR - Asteroids game init.")
-  (gl:clear-color 0.0 0.0 0.0 1.0))
+  (gl:clear-color 0.0 0.0 0.0 1.0)
+
+  ;; add some systems
+  (log:debug "Booting up ECS...")
+  (p2de:register-system 'basic-physics)
+  (p2de:register-system 'game-area-wrapper)
+  (p2de:register-system 'decayer)
+  (p2de:register-system 'renderer)
+
+  ;; and an entity
+  (spawn-asteroid (p2dm:make-vector-2d 600.0 400.0) 40 (p2dm:make-vector-2d 40.0 60.0))
+  (spawn-asteroid (p2dm:make-vector-2d 200.0 300.0) 30 (p2dm:make-vector-2d -50.0 45.0))
+  (spawn-bullet (p2dm:make-vector-2d 100.0 100.0) (p2dm:make-vector-2d 0.0 50.0) 5.0 5.0 nil)
+  (spawn-ship (p2dm:make-vector-2d 200.0 400.0)))
+
+
 
 (defmethod p2d:deinitialize ((game asteroids-game))
   (log:info "TSWR - Asteroids game deinit."))
@@ -61,10 +76,14 @@
   
   (mapc #'wrap-into-play-area (append *asteroids* *bullets* (list *player-ship*))))
 
+(defmethod p2d:on-idle ((game asteroids-game))
+  ;; FIXME temporary hack to make ECS work together with current system
+  (gl:load-identity)
+  (gl:clear :color-buffer))
+
 (defmethod p2d:on-render ((game asteroids-game))
   ;; draw stuff
 
-  (gl:clear :color-buffer)
   (gl:load-identity)
 
   (render *player-ship*)
@@ -94,3 +113,4 @@
 ;;; util
 (defun wrap-in-range (x a b)
   (setf x (+ a (mod (- x a) (- b a)))))
+
