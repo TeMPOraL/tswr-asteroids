@@ -66,7 +66,7 @@
     
     (p2de:add-component e 'renderable
                         :sprite :ship
-                        :color (p2dg:make-color-4 0.0 1.0 0.0 1.0)
+                        :color (p2dg:make-color-4 1.0 1.0 0.0 1.0)
                         :scale *default-ship-size*)
     e))
 

@@ -41,11 +41,7 @@
                                      (:file "wraps-around")))
 
                (:module "entities"
-                        :components ((:file "entity") ;old, remove
-                                     (:file "asteroid") ;old, remove
-                                     (:file "bullet") ;old, remove
-                                     (:file "ship") ;old, remove
-                                     (:file "entity-creator")))
+                        :components ((:file "entity-creator")))
 
                (:module "systems"
                         :components ((:file "basic-physics")
