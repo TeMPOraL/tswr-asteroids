@@ -47,5 +47,6 @@
                         :components ((:file "basic-physics")
                                      (:file "game-area-wrapper")
                                      (:file "decayer")
+                                     (:file "ship-effects")
                                      (:file "renderer")))
                (:file "main")))

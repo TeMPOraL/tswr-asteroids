@@ -16,11 +16,12 @@
 
   ;; add some systems
   (log:debug "Booting up ECS...")
-  (p2de:register-system 'basic-physics)
-  (p2de:register-system 'game-area-wrapper)
-  (p2de:register-system 'decayer)
-  (p2de:register-system 'renderer)
-
+  (mapc #'p2de:register-system '(basic-physics
+                                 game-area-wrapper
+                                 decayer
+                                 ship-effects
+                                 renderer))
+  
   ;; and an entity
   (spawn-asteroid (p2dm:make-vector-2d 600.0 400.0) 40 (p2dm:make-vector-2d 40.0 60.0))
   (spawn-asteroid (p2dm:make-vector-2d 200.0 300.0) 30 (p2dm:make-vector-2d -50.0 45.0))

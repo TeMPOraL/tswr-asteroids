@@ -1,5 +1,10 @@
 (in-package #:tswr-asteroids)
 
+(defparameter *debug-render-kinematics* t "Draw kinematics information on the objects.")
+
+(defparameter +debug-color-velocity+ (p2dg:make-color-4 1.0 0.0 0.0 1.0))
+(defparameter +debug-color-acceleration+ (p2dg:make-color-4 0.0 1.0 0.0 1.0))
+
 (p2de:defsystem renderer
   (position renderable))
 
@@ -9,12 +14,21 @@
     (with-slots (sprite color scale) (p2de:find-component entity 'renderable)
       ;;
       (gl:load-identity)
-      (p2dg:translate2 position)
-      (if-let ((orientation (p2de:find-component entity 'orientation)))
-        (p2dg:rotatez* (orientation orientation)))
-      (p2dg:scale2-uniform scale)
-      (p2dg:color4 color)
-      (draw-pseudo-sprite sprite))))
+      (gl:with-pushed-matrix
+        (p2dg:translate2 position)
+        (gl:with-pushed-matrix
+          (if-let ((orientation (p2de:find-component entity 'orientation)))
+            (p2dg:rotatez* (orientation orientation)))
+          (p2dg:scale2-uniform scale)
+          (p2dg:color4 color)
+          (draw-pseudo-sprite sprite))
+        (when *debug-render-kinematics*
+          (when-let ((kinematics (p2de:find-component entity 'kinematics)))
+            (gl:with-pushed-matrix
+              (p2dg:color4 +debug-color-velocity+)
+              (draw-vector-marker-to-point (slot-value kinematics 'velocity))
+              (p2dg:color4 +debug-color-acceleration+)
+              (draw-vector-marker-to-point (slot-value kinematics 'acceleration)))))))))
 
 (defun draw-pseudo-sprite (sprite)
   "Pseudo because it's not really a `SPRITE', but rather immediate-mode geometry."
@@ -22,5 +36,17 @@
     (:asteroid (p2dg:draw-regular-polygon-outline 7))
     (:ship (gl:scale 1 1.5 1)
            (p2dg:draw-triangle))
+    (:ship-accelerating (gl:scale 1 1.5 1)
+                        (p2dg:draw-triangle)
+                        (gl:scale 0.5 1.5 0.5)
+                        (p2dg:draw-triangle))
     (:bullet (p2dg:draw-circle-outline :resolution 16))
     (t (p2dg:draw-square))))
+
+
+(defun draw-vector-marker-to-point (point)
+  "Draws a vector marker from (0 0) to `POINT'."
+  (gl:with-primitive :triangles
+    (gl:vertex 3.0 0.0)
+    (gl:vertex -3.0 0.0)
+    (gl:vertex (p2dm:vec-x point) (p2dm:vec-y point))))
