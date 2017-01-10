@@ -65,7 +65,7 @@
     (p2de:add-component e 'ship)
     
     (p2de:add-component e 'gun
-                        :bullet-type :standard
+                        :bullet-type :special ;:standard
                         :cooldown-left 0.0
                         :cooldown-default 0.5) ;FIXME magic
     
@@ -91,25 +91,40 @@
     e))
 
 (defun shoot-bullet (&key position velocity type buffs)
-  (declare (ignore type buffs))
   (let ((e (spawn-basic-bullet :position position
                                :velocity velocity)))
 
-    (p2de:add-component e 'collision-sphere
-                        :radius 2.0)    ;FIXME (size) magic, bullet-type dependent
-    
     (p2de:add-component e 'bullet
-                        :passthrough nil)
+                        :passthrough nil
+                        :buffs buffs)
+
+    (case type
+      (:special
+       (p2de:add-component e 'collision-sphere
+                           :radius 4.0) ;FIXME (size) magic, bullet-type dependent
+
+       (p2de:add-component e 'decays
+                           :life-remaining 0.5) ;FIXME (life) magic, bullet-type dependent
     
-    (p2de:add-component e 'decays
-                        :life-remaining 1.5) ;FIXME (life) magic, bullet-type dependent
+       (p2de:add-component e 'renderable
+                           :sprite :huge-bullet
+                           :color (p2dg:make-color-4 1.0 0.0 1.0 1.0) ;TODO different types = different colors
+                           :scale 4.0   ;FIXME (size) magic, bullet-type dependent
+                           )
+       )
+      (otherwise
+       (p2de:add-component e 'collision-sphere
+                           :radius 2.0) ;FIXME (size) magic, bullet-type dependent
     
-    (p2de:add-component e 'renderable
-                        :sprite :bullet
-                        :color (p2dg:make-color-4 1.0 0.0 0.0 1.0) ;TODO different types = different colors
-                        :scale 2.0      ;FIXME (size) magic, bullet-type dependent
-                        )
+       (p2de:add-component e 'decays
+                           :life-remaining 1.5) ;FIXME (life) magic, bullet-type dependent
     
+       (p2de:add-component e 'renderable
+                           :sprite :bullet
+                           :color (p2dg:make-color-4 1.0 0.0 0.0 1.0) ;TODO different types = different colors
+                           :scale 2.0   ;FIXME (size) magic, bullet-type dependent
+                           )
+       ))
     e))
 
 

@@ -1,4 +1,5 @@
 (in-package #:tswr-asteroids)
 
 (p2de:defcomponent bullet
-  ((passthrough nil)))
+  ((passthrough nil)
+   (buffs '())))
