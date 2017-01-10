@@ -16,7 +16,8 @@
 
   ;; add some systems
   (log:debug "Booting up ECS...")
-  (mapc #'p2de:register-system '(basic-physics
+  (mapc #'p2de:register-system '(input
+                                 basic-physics
                                  game-area-wrapper
                                  decayer
                                  ship-effects
@@ -31,25 +32,13 @@
   (log:info "TSWR - Asteroids game deinit."))
 
 (defmethod p2d:on-key-event ((game asteroids-game) key state repeat)
-  (declare (ignorable repeat))
+  (let ((key-code (sdl2:scancode-symbol (sdl2:scancode-value key))))
+    (log:trace key state key-code repeat)
 
-  (with-slots (position) (p2de:find-component *player-ship-entity* 'position)
-    (with-slots (orientation) (p2de:find-component *player-ship-entity* 'orientation)
-      (with-slots (acceleration angular-velocity) (p2de:find-component *player-ship-entity* 'kinematics)
-        (let ((key-code (sdl2:scancode-symbol (sdl2:scancode-value key)))
-              (direction (p2dm:rotated-vector-2d (p2dm:make-vector-2d 0.0 1.0) orientation)))
-          (log:trace key state key-code repeat)
-          
-          (case key-code
-            (:scancode-up (setf acceleration (p2dm:scaled-vector direction (if (sdl2:key-down-p state) 150.0 0.0))))
-            (:scancode-down (setf acceleration (p2dm:scaled-vector direction (if (sdl2:key-down-p state) -100.0 0.0))))
-            (:scancode-left (setf angular-velocity (if (sdl2:key-down-p state) (p2dm:deg->rad 180.0) 0.0)))
-            (:scancode-right (setf angular-velocity (if (sdl2:key-down-p state) (p2dm:deg->rad -180.0) 0.0)))
-            (:scancode-space (shoot-bullet position direction))
-            (t nil))
+    ;; player input handled by ECS for now
 
-          (when (eql key-code :scancode-escape)
-            (sdl2:push-event :quit)))))))
+    (when (eql key-code :scancode-escape)
+      (sdl2:push-event :quit))))
 
 (defmethod p2d:on-tick ((game asteroids-game) dt)
   ;; handled entirely by ECS for now
@@ -73,11 +62,4 @@
 (defun run ()
   (p2d:run (make-instance 'asteroids-game)))
 
-;;; game
 
-(defun shoot-bullet (start-position direction)
-  (spawn-bullet (p2dm:scaled-vector start-position 1.0) ;FIXME hack for missing (clone ...) ability
-                      (p2dm:scaled-vector direction 500)
-                      2.0
-                      1.5
-                      nil))

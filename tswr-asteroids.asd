@@ -44,7 +44,8 @@
                         :components ((:file "entity-creator")))
 
                (:module "systems"
-                        :components ((:file "basic-physics")
+                        :components ((:file "input")
+                                     (:file "basic-physics")
                                      (:file "game-area-wrapper")
                                      (:file "decayer")
                                      (:file "ship-effects")

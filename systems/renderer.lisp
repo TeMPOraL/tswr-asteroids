@@ -46,7 +46,6 @@
 
 (defun draw-vector-marker-to-point (point)
   "Draws a vector marker from (0 0) to `POINT'."
-  (gl:with-primitive :triangles
-    (gl:vertex 3.0 0.0)
-    (gl:vertex -3.0 0.0)
-    (gl:vertex (p2dm:vec-x point) (p2dm:vec-y point))))
+  (gl:with-primitive :lines
+                     (gl:vertex 0.0 0.0)
+                     (gl:vertex (p2dm:vec-x point) (p2dm:vec-y point))))
