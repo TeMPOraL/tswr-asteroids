@@ -1,6 +1,6 @@
 (in-package #:tswr-asteroids)
 
-(defparameter *debug-render-kinematics* t "Draw kinematics information on the objects.")
+(defparameter *debug-render-kinematics* nil "Draw kinematics information on the objects.")
 
 (defparameter +debug-color-velocity+ (p2dg:make-color-4 1.0 0.0 0.0 1.0))
 (defparameter +debug-color-acceleration+ (p2dg:make-color-4 0.0 1.0 0.0 1.0))
