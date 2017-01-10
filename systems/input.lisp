@@ -25,7 +25,7 @@
              (position (p2de:find-component entity 'position))
              (orientation (p2de:find-component entity 'orientation)))
     (when (key-pressed-p :scancode-space)
-      (shoot entity gun position orientation))))
+      (shoot gun position orientation))))
 
 
 (defun key-pressed-p (scancode)
@@ -49,12 +49,18 @@
   (setf (slot-value kinematics 'angular-velocity)
         (p2dm:deg->rad (* 180.0 angle-sign))))
 
-(defun shoot (entity gun position orientation)
-  (declare (ignore entity gun))
+(defun shoot (gun position orientation)
   (let ((direction (orientation-value->direction (slot-value orientation 'orientation)))
         (pos (slot-value position 'position)))
-    (spawn-bullet (p2dm:scaled-vector pos 1.0) ;FIXME hack for missing (clone ...) ability
-                  (p2dm:scaled-vector direction 500)
-                  2.0
-                  1.5
-                  nil)))
+    (with-slots (cooldown-left
+                 cooldown-default
+                 bullet-type
+                 default-bullet-velocity
+                 buffs)
+        gun
+      (unless (> cooldown-left 0.0)
+        (setf cooldown-left cooldown-default)
+        (shoot-bullet :position (p2dm:scaled-vector pos 1.0)
+                      :velocity (p2dm:scaled-vector direction default-bullet-velocity)
+                      :type bullet-type
+                      :buffs buffs)))))

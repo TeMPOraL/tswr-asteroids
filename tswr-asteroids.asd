@@ -47,6 +47,7 @@
                         :components ((:file "input")
                                      (:file "basic-physics")
                                      (:file "game-area-wrapper")
+                                     (:file "gun-cooldown-updater")
                                      (:file "decayer")
                                      (:file "ship-effects")
                                      (:file "renderer")))

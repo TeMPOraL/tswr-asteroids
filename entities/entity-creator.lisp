@@ -8,6 +8,9 @@
 (defparameter *default-explosion-life* 1.0)
 (defparameter *default-explosion-size* 10.0)
 
+
+;;; Asteroids
+
 (defun spawn-asteroid (position size velocity)
   (let ((e (p2de:make-entity)))
     (p2de:add-component e 'position
@@ -39,6 +42,9 @@
                         :scale size)
     e))
 
+
+;;; Ships
+
 (defun spawn-ship (position)
   (let ((e (p2de:make-entity)))
     (p2de:add-component e 'position
@@ -60,7 +66,8 @@
     
     (p2de:add-component e 'gun
                         :bullet-type :standard
-                        :cooldown-left 0.0)
+                        :cooldown-left 0.0
+                        :cooldown-default 0.5) ;FIXME magic
     
     (p2de:add-component e 'player-controlled)
     
@@ -70,31 +77,43 @@
                         :scale *default-ship-size*)
     e))
 
-(defun spawn-bullet (position velocity size life passthrough)
+
+;;; Bullets
+
+(defun spawn-basic-bullet (&key position velocity)
   (let ((e (p2de:make-entity)))
     (p2de:add-component e 'position
                         :position position)
-    
     (p2de:add-component e 'kinematics
                         :velocity velocity)
+    (p2de:add-component e 'wraps-around)
+    
+    e))
+
+(defun shoot-bullet (&key position velocity type buffs)
+  (declare (ignore type buffs))
+  (let ((e (spawn-basic-bullet :position position
+                               :velocity velocity)))
 
     (p2de:add-component e 'collision-sphere
-                        :radius size)
+                        :radius 2.0)    ;FIXME (size) magic, bullet-type dependent
     
     (p2de:add-component e 'bullet
-                        :passthrough passthrough)
+                        :passthrough nil)
     
     (p2de:add-component e 'decays
-                        :life-remaining life)
-    
-    (p2de:add-component e 'wraps-around)
+                        :life-remaining 1.5) ;FIXME (life) magic, bullet-type dependent
     
     (p2de:add-component e 'renderable
                         :sprite :bullet
                         :color (p2dg:make-color-4 1.0 0.0 0.0 1.0) ;TODO different types = different colors
-                        :scale size
+                        :scale 2.0      ;FIXME (size) magic, bullet-type dependent
                         )
+    
     e))
+
+
+;;; Powerups
 
 (defun spawn-powerup (position type bonus life)
   (declare (ignore type bonus))
@@ -122,6 +141,9 @@
                         :color (p2dg:make-color-4 1.0 1.0 0.0 1.0)
                         :scale *default-powerup-size*)
     e))
+
+
+;;; FX
 
 (defun spawn-explosion (position)
   (let ((e (p2de:make-entity)))

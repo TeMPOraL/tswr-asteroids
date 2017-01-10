@@ -49,3 +49,6 @@
   (gl:with-primitive :lines
                      (gl:vertex 0.0 0.0)
                      (gl:vertex (p2dm:vec-x point) (p2dm:vec-y point))))
+
+(defun renderer-toggle-debug-kinematics ()
+  (setf *debug-render-kinematics* (not *debug-render-kinematics*)))

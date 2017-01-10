@@ -19,6 +19,7 @@
   (mapc #'p2de:register-system '(input
                                  basic-physics
                                  game-area-wrapper
+                                 gun-cooldown-updater
                                  decayer
                                  ship-effects
                                  renderer))
@@ -39,7 +40,7 @@
 
     (when (and (eql key-code :scancode-f1)
                (sdl2:key-down-p state))
-      (setf *debug-render-kinematics* (not *debug-render-kinematics*)))
+      (renderer-toggle-debug-kinematics))
     (when (eql key-code :scancode-escape)
       (sdl2:push-event :quit))))
 
