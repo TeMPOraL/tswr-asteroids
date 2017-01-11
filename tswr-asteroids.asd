@@ -46,6 +46,7 @@
                (:module "systems"
                         :components ((:file "input")
                                      (:file "basic-physics")
+                                     (:file "collision-detector")
                                      (:file "game-area-wrapper")
                                      (:file "gun-cooldown-updater")
                                      (:file "decayer")

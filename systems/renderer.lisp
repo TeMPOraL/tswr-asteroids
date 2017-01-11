@@ -57,9 +57,9 @@
                      (gl:vertex (p2dm:vec-x point) (p2dm:vec-y point))))
 
 (defun make-color-from-layer (layer)
-  ;; TODO different colors for different layers
-  (declare (ignore layer))
-  (p2dg:make-color-4 1.0 1.0 1.0 1.0))
+  (if (eql layer :undefined)
+      (p2dg:make-color-4 1.0 0.0 0.0 1.0)
+      (p2dg:make-color-4 1.0 1.0 1.0 1.0)))
 
 (defun renderer-toggle-debug-kinematics ()
   (setf *debug-render-kinematics* (not *debug-render-kinematics*)))

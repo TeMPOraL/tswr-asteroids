@@ -24,7 +24,8 @@
                         :angular-velocity (p2dm:random-float -1.0 1.0))
     
     (p2de:add-component e 'collision-sphere
-                        :radius size)
+                        :radius size
+                        :layer :asteroid)
     
     (p2de:add-component e 'asteroid
                         )
@@ -58,7 +59,8 @@
                         :rotation-speed-limit p2dm:+2pi+)
     
     (p2de:add-component e 'collision-sphere
-                        :radius *default-ship-size*)
+                        :radius *default-ship-size*
+                        :layer :ship)
     
     (p2de:add-component e 'wraps-around)
     
@@ -101,7 +103,9 @@
     (case type
       (:special
        (p2de:add-component e 'collision-sphere
-                           :radius 4.0) ;FIXME (size) magic, bullet-type dependent
+                           :radius 4.0 ;FIXME (size) magic, bullet-type dependent
+                           :layer :bullet
+                           )
 
        (p2de:add-component e 'decays
                            :life-remaining 0.5) ;FIXME (life) magic, bullet-type dependent
@@ -114,7 +118,9 @@
        )
       (otherwise
        (p2de:add-component e 'collision-sphere
-                           :radius 2.0) ;FIXME (size) magic, bullet-type dependent
+                           :radius 2.0 ;FIXME (size) magic, bullet-type dependent
+                           :layer :bullet
+                           )
     
        (p2de:add-component e 'decays
                            :life-remaining 1.5) ;FIXME (life) magic, bullet-type dependent
@@ -139,7 +145,8 @@
     (p2de:add-component e 'kinematics)       ;TODO random velocity
     
     (p2de:add-component e 'collision-sphere
-                        :radius *default-powerup-size*)
+                        :radius *default-powerup-size*
+                        :layer :powerup)
     
     (p2de:add-component e 'wraps-around)
     
