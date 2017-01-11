@@ -38,16 +38,22 @@
   (log:info "TSWR - Asteroids game deinit."))
 
 (defmethod p2d:on-key-event ((game asteroids-game) key state repeat)
-  (let ((key-code (sdl2:scancode-symbol (sdl2:scancode-value key))))
-    (log:trace key state key-code repeat)
+  (macrolet ((on-key-down (scancode &body code)
+               `(when (and (eql key-code ,scancode)
+                           (sdl2:key-down-p state))
+                  ,@code)))
+   (let ((key-code (sdl2:scancode-symbol (sdl2:scancode-value key))))
+     (log:trace key state key-code repeat)
 
-    ;; player input handled by ECS for now
+     ;; player input handled by ECS for now
+     (on-key-down :scancode-f1
+                  (renderer-toggle-debug-kinematics))
 
-    (when (and (eql key-code :scancode-f1)
-               (sdl2:key-down-p state))
-      (renderer-toggle-debug-kinematics))
-    (when (eql key-code :scancode-escape)
-      (sdl2:push-event :quit))))
+     (on-key-down :scancode-f2
+                  (renderer-toggle-debug-collision))
+
+     (on-key-down :scancode-escape
+                  (sdl2:push-event :quit)))))
 
 (defmethod p2d:on-tick ((game asteroids-game) dt)
   ;; handled entirely by ECS for now

@@ -1,6 +1,7 @@
 (in-package #:tswr-asteroids)
 
 (defparameter *debug-render-kinematics* nil "Draw kinematics information on the objects.")
+(defparameter *debug-render-collision* nil "Draw collision data on the objects.")
 
 (defparameter +debug-color-velocity+ (p2dg:make-color-4 1.0 0.0 0.0 1.0))
 (defparameter +debug-color-acceleration+ (p2dg:make-color-4 0.0 1.0 0.0 1.0))
@@ -28,7 +29,13 @@
               (p2dg:color4 +debug-color-velocity+)
               (draw-vector-marker-to-point (slot-value kinematics 'velocity))
               (p2dg:color4 +debug-color-acceleration+)
-              (draw-vector-marker-to-point (slot-value kinematics 'acceleration)))))))))
+              (draw-vector-marker-to-point (slot-value kinematics 'acceleration)))))
+        (when *debug-render-collision*
+          (when-let ((bounding-sphere (p2de:find-component entity 'collision-sphere)))
+            (gl:with-pushed-matrix
+              (p2dg:color4 (make-color-from-layer (slot-value bounding-sphere 'layer)))
+              (p2dg:scale2-uniform (slot-value bounding-sphere 'radius))
+              (p2dg:draw-circle-outline))))))))
 
 (defun draw-pseudo-sprite (sprite)
   "Pseudo because it's not really a `SPRITE', but rather immediate-mode geometry."
@@ -43,12 +50,19 @@
     (:bullet (p2dg:draw-circle-outline :resolution 16))
     (t (p2dg:draw-square))))
 
-
 (defun draw-vector-marker-to-point (point)
   "Draws a vector marker from (0 0) to `POINT'."
   (gl:with-primitive :lines
                      (gl:vertex 0.0 0.0)
                      (gl:vertex (p2dm:vec-x point) (p2dm:vec-y point))))
 
+(defun make-color-from-layer (layer)
+  ;; TODO different colors for different layers
+  (declare (ignore layer))
+  (p2dg:make-color-4 1.0 1.0 1.0 1.0))
+
 (defun renderer-toggle-debug-kinematics ()
   (setf *debug-render-kinematics* (not *debug-render-kinematics*)))
+
+(defun renderer-toggle-debug-collision ()
+  (setf *debug-render-collision* (not *debug-render-collision*)))
