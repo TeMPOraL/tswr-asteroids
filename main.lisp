@@ -16,18 +16,23 @@
 
   ;; add some systems
   (log:debug "Booting up ECS...")
-  (mapc #'p2de:register-system '(input
-                                 basic-physics
-                                 game-area-wrapper
-                                 gun-cooldown-updater
-                                 decayer
-                                 ship-effects
-                                 renderer))
+  (initialize-systems '((input :priority 0)
+                        (basic-physics :priority 1)
+                        (game-area-wrapper :priority 2)
+                        (gun-cooldown-updater :priority 3)
+                        (decayer :priority 4)
+                        (ship-effects :priority 5)
+                        (renderer :priority 6)))
   
   ;; and an entity
   (spawn-asteroid (p2dm:make-vector-2d 600.0 400.0) 40 (p2dm:make-vector-2d 40.0 60.0))
   (spawn-asteroid (p2dm:make-vector-2d 200.0 300.0) 30 (p2dm:make-vector-2d -50.0 45.0))
   (setf *player-ship-entity* (spawn-ship (p2dm:make-vector-2d 200.0 400.0))))
+
+(defun initialize-systems (systems)
+  (mapc (lambda (system-definition)
+          (apply #'p2de:register-system system-definition))
+        systems))
 
 (defmethod p2d:deinitialize ((game asteroids-game))
   (log:info "TSWR - Asteroids game deinit."))
