@@ -16,15 +16,15 @@
 
   ;; add some systems
   (log:debug "Booting up ECS...")
-  (initialize-systems '((input :priority 0)
-                        (collision-detector :priority 2)
-                        (collision-handler :priority 3)
-                        (basic-physics :priority 10)
-                        (game-area-wrapper :priority 15)
-                        (gun-cooldown-updater :priority 20)
-                        (decayer :priority 30)
-                        (ship-effects :priority 40)
-                        (renderer :priority 50)))
+  (initialize-systems '((input :priority 0 :type :simulation)
+                        (collision-detector :priority 2 :type :simulation)
+                        (collision-handler :priority 3 :type :simulation)
+                        (basic-physics :priority 10 :type :simulation)
+                        (game-area-wrapper :priority 15 :type :simulation)
+                        (gun-cooldown-updater :priority 20 :type :simulation)
+                        (decayer :priority 30 :type :simulation)
+                        (ship-effects :priority 40 :type :simulation)
+                        (renderer :priority 50 :type :frame)))
   
   ;; and an entity
   (spawn-asteroid (p2dm:make-vector-2d 600.0 400.0) 40 (p2dm:make-vector-2d 40.0 60.0))
