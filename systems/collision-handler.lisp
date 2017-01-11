@@ -14,13 +14,14 @@
   (let ((entity-1 (p2de:entity-by-id entity-1-id))
         (entity-2 (p2de:entity-by-id entity-2-id)))
 
-    ;; TODO dispatch; basically, game rules go here
+    ;; TODO dispatch; basically, game rules go here (so maybe migrate it to some game rules file?)
     
     (when (bulletp entity-1)            ;NOTE test rule - bullet disappears when asteroid hit
       (p2de:schedule-entity-for-deletion entity-1))
     (when (asteroidp entity-1)          ;NOTE test rule - asteroid disappears when hit by something
+      (spawn-child-asteroids entity-1)
+      ;; TODO maybe spawn powerup
       (p2de:schedule-entity-for-deletion entity-1))))
-
 
 ;;; FIXME those function REALLY need to be locally scoped...
 ;;; Either flet them, or introduce more namespaces via packages.
