@@ -17,9 +17,10 @@
   ;; add some systems
   (log:debug "Booting up ECS...")
   (initialize-systems '((input :priority 0)
-                        (basic-physics :priority 1)
                         (collision-detector :priority 2)
-                        (game-area-wrapper :priority 10)
+                        (collision-handler :priority 3)
+                        (basic-physics :priority 10)
+                        (game-area-wrapper :priority 15)
                         (gun-cooldown-updater :priority 20)
                         (decayer :priority 30)
                         (ship-effects :priority 40)

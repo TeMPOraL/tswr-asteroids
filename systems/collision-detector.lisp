@@ -9,7 +9,7 @@
     (let ((other (p2de:entity-by-id other-id)))
       (when (and (not (eql (p2de:entity-id entity) other-id))
                  (collidep entity other))
-        (make-collision-pair entity other)))))
+        (make-collision-pair (p2de:entity-id entity) other-id)))))
 
 (defun collidep (entity other)
   (let* ((p1 (p2de:find-component entity 'position))
@@ -20,14 +20,15 @@
                                                                   (slot-value p2 'position)))
          (threshold (p2dm:square (float (+ (slot-value s1 'radius)
                                            (slot-value s2 'radius))))))
-    ;; TODO include layer collision computation
     (and (< distance-squared threshold)
          (layers-can-collide (slot-value s1 'layer)
                              (slot-value s2 'layer)))))
 
-(defun make-collision-pair (entity other)
-  (declare (ignore entity other))
-  (log:info "collision!"))
+(defun make-collision-pair (entity-id other-id)
+  (let ((e (p2de:make-entity)))
+    (p2de:add-component e 'collision-pair
+                        :entity-1-id entity-id
+                        :entity-2-id other-id)))
 
 
 (defun layers-can-collide (layer-1 layer-2)
