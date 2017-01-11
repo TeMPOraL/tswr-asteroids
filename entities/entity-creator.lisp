@@ -67,9 +67,9 @@
     (p2de:add-component e 'ship)
     
     (p2de:add-component e 'gun
-                        :bullet-type :special ;:standard
+                        :bullet-type :standard ;:special
                         :cooldown-left 0.0
-                        :cooldown-default 0.5) ;FIXME magic
+                        :cooldown-default 0.25) ;FIXME magic
     
     (p2de:add-component e 'player-controlled)
     
