@@ -11,7 +11,6 @@
   (p2de:schedule-entity-for-deletion entity))
 
 (defun handle-collision (entity-1-id entity-2-id)
-  (log:info "Handling collision between #~A and #~A" entity-1-id entity-2-id)
   (let ((entity-1 (p2de:entity-by-id entity-1-id))
         (entity-2 (p2de:entity-by-id entity-2-id)))
 
