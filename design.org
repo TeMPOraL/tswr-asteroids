@@ -1,0 +1,70 @@
+#+title: Design notes
+#+startup: hidestars
+
+Some design notes to help finalize the game.
+
+* Main game
+** UI elements
+   - lives remaining
+   - current score
+   - high score
+   - current weapon
+   - current ship buffs (alternatively: visible on ship)
+   - current weapon buffs (alternatively: visible on ship)
+
+** Basic entity categories
+
+*** Player Ship
+*** Asteroid
+    Splits into smaller when destroyed, several times. Smallest just die.
+    Gives points, occassionally drops a powerup.
+
+*** Bullet
+    Kills asteroids.
+
+*** Powerup
+    Collected when colliding with player ship; decaying with time.
+
+*** (future) some other kind of enemy (maybe an intelligent one)
+
+** Buffs
+   ALL BUFFS ARE INDEPENDENT and can be intermixed, though in some cases, a combination may be meaningless.
+
+*** Gun types
+    - machine gun - fires bullets
+    - cannon - fires explosive bullets
+    - missile launcher - fires homing missiles that aim for closest target
+    - laser - fires laser beams that can hit all targets along the beam
+
+*** Gun buffs
+    Can be equipped simultaneously.
+    - triple shot - shoots 3 bullets in spread, like: \|/.
+    - bidirectional shot - shoots additional bullet from behind
+    - faster fire - halves cooldown
+    - faster bullets - bullets move faster (not applicable to laser)
+    - big bullets - mutliplies the size of the bullet
+
+*** Bullet types
+    - standard - collision = hit
+    - explosive - short range; explode on collision or decay, explosion kills everything in range
+    - fragmentary - on collision, besides destroying the target it splits into number of standard bullet shards somewhat uniformly
+    - Hanzo - like fragmentary, except fragments are fast-moving and launched in a fan, as if they bounced off the target's bounding sphere
+
+*** Bullet buffs
+    - longer living bullets - increases (e.g. doubles) the life time of bullets
+
+*** Ship buffs
+    - shield - a shield that can resist one collision with an asteroid
+    - repulsor - pushes asteroids away a bit in a small radius around the ship
+
+** Game rules
+   - player starts with N lives
+   - ship collides with asteroid => asteroid is destroyed, and:
+     - player has shield => player loses shield
+     - player has no shield => ship is destroyed, player loses life
+   - lives == 0 => game over
+   - asteroid is destroyed => player gets points for it
+   - asteroids are continuously spawned randomly at the edge of the screen
+     - asteroid spawn frequency, starting size and starting speed increases with game time
+   - game has no win condition - you fight until you die
+
