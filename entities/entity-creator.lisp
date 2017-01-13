@@ -191,3 +191,23 @@
                         :color (p2dg:make-color-4 1.0 0.0 0.0 1.0)
                         :scale *default-explosion-size*)
     e))
+
+
+
+;;; Debug spawning utils
+
+(defun debug-spawn-asteroid ()
+  (spawn-asteroid (p2dm:make-vector-2d (random (float p2d:*canvas-width*)) (random (float p2d:*canvas-height*)))
+                  (+ 5.0 (* 5.0 (random 5.0)))
+                  (p2dm:scaled-vector (p2dm:normalized-vector (p2dm:make-vector-2d (random 1.0) (random 1.0)))
+                                      (+ 5.0 (random 100.0)))))
+
+(defun debug-spawn-powerup ()
+  (spawn-powerup (p2dm:make-vector-2d (random (float p2d:*canvas-width*)) (random (float p2d:*canvas-height*)))
+                 (whichever :triple-fire
+                            :bidi-fire
+                            :points)
+                 :whatever
+                 10.0))
+
+

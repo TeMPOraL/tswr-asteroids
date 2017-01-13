@@ -54,6 +54,12 @@
      (on-key-down :scancode-f2
                   (renderer-toggle-debug-collision))
 
+     (on-key-down :scancode-f5
+                  (debug-spawn-asteroid))
+
+     (on-key-down :scancode-f6
+                  (debug-spawn-powerup))
+
      (on-key-down :scancode-escape
                   (sdl2:push-event :quit)))))
 

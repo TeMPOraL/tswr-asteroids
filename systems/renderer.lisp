@@ -48,6 +48,9 @@
                         (gl:scale 0.5 1.5 0.5)
                         (p2dg:draw-triangle))
     (:bullet (p2dg:draw-circle-outline :resolution 16))
+    (:powerup (p2dg:rotatez* (p2dm:deg->rad 45.0))
+              (p2dg:scale2-uniform 0.75)
+              (p2dg:draw-square-outline))
     (t (p2dg:draw-square))))
 
 (defun draw-vector-marker-to-point (point)
