@@ -8,6 +8,8 @@
 (defparameter *default-explosion-life* 1.0)
 (defparameter *default-explosion-size* 10.0)
 
+(defparameter *triple-fire-angle-offset* (p2dm:deg->rad 30.0))
+
 
 ;;; Asteroids
 
@@ -76,6 +78,7 @@
     
     (p2de:add-component e 'gun
                         :bullet-type :standard ;:special
+                        :buffs '(:bidi-fire :triple-fire)
                         :cooldown-left 0.0
                         :cooldown-default 0.25) ;FIXME magic
     
@@ -93,12 +96,38 @@
 (defun spawn-basic-bullet (&key position velocity)
   (let ((e (p2de:make-entity)))
     (p2de:add-component e 'position
-                        :position position)
+                        :position (p2dm:scaled-vector position 1.0))
     (p2de:add-component e 'kinematics
-                        :velocity velocity)
+                        :velocity (p2dm:scaled-vector velocity 1.0))
     (p2de:add-component e 'wraps-around)
     
     e))
+
+(defun shoot-gun (&key position bullet-velocity bullet-type buffs)
+  (let ((bullets-to-fire-velocities (list bullet-velocity)))
+    ;; Apply gun buffs to number/parameters of launched projectiles.
+    (when (member :triple-fire buffs)
+      (setf bullets-to-fire-velocities
+            (mapcan (lambda (vel)
+                      (list vel
+                            (p2dm:rotated-vector-2d vel *triple-fire-angle-offset*)
+                            (p2dm:rotated-vector-2d vel (- *triple-fire-angle-offset*))))
+                    bullets-to-fire-velocities)))
+    
+    (when (member :bidi-fire buffs)
+      (setf bullets-to-fire-velocities
+            (mapcan (lambda (vel)
+                      (list vel
+                            (p2dm:negative-vector vel)))
+                    bullets-to-fire-velocities)))
+
+    ;; Actually shoot bullets.
+    (mapc (lambda (vel)
+            (shoot-bullet :position position
+                          :velocity vel
+                          :type bullet-type
+                          :buffs buffs))
+          bullets-to-fire-velocities)))
 
 (defun shoot-bullet (&key position velocity type buffs)
   ;; TODO consider gun buffs like multiple bullets, bigger bullets, faster shooting, etc.

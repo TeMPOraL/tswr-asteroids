@@ -60,10 +60,7 @@
         gun
       (unless (> cooldown-left 0.0)
         (setf cooldown-left cooldown-default)
-
-        ;; TODO bullet shooting should be handled by the gun directly, IMO - to support things like triple-fire, etc.
-        ;; lambdas are data too, btw.
-        (shoot-bullet :position (p2dm:scaled-vector pos 1.0)
-                      :velocity (p2dm:scaled-vector direction default-bullet-velocity)
-                      :type bullet-type
-                      :buffs buffs)))))
+        (shoot-gun :position pos
+                   :bullet-velocity (p2dm:scaled-vector direction default-bullet-velocity)
+                   :bullet-type bullet-type
+                   :buffs buffs)))))
