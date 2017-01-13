@@ -3,6 +3,35 @@
 (p2de:defsystem collision-detector
   (position collision-sphere))
 
+
+;;; Collision layers.
+
+(defparameter *collision-layers-alist* '() "An alist describing all layers a given layer can collide with.")
+
+(defun layers-can-collide (layer-1 layer-2)
+  "Registers `LAYER-1' and `LAYER-2' as mutually collideable."
+  (flet ((collision-possible (collider collidee)
+           (if (assoc collider *collision-layers-alist*)
+               (pushnew collidee (cdr (assoc collider *collision-layers-alist*)))
+               (push (list collider collidee) *collision-layers-alist*))))
+    (collision-possible layer-1 layer-2)
+    (collision-possible layer-2 layer-1)))
+
+(defun layers-can-collide-p (layer-1 layer-2)
+  (member layer-2 (cdr (assoc layer-1 *collision-layers-alist*))))
+
+(layers-can-collide :bullet :asteroid)
+(layers-can-collide :asteroid :ship)
+(layers-can-collide :ship :powerup)
+
+
+
+;;; NOTE
+;;; Collisions are n^2 here.
+;;; Possible optimization: split entities into separate lists, one for each collision layer
+;;; and process only possible collisions.
+;;; IDEA: In ECS, add on-register and on-unregister hooks.
+
 (defmethod p2de:do-system ((system collision-detector) entity dt)
   (declare (ignore dt))
   (dolist (other-id (p2de::entities system)) ;FIXME accessing unexported function
@@ -21,8 +50,8 @@
          (threshold (p2dm:square (float (+ (slot-value s1 'radius)
                                            (slot-value s2 'radius))))))
     (and (< distance-squared threshold)
-         (layers-can-collide (slot-value s1 'layer)
-                             (slot-value s2 'layer)))))
+         (layers-can-collide-p (slot-value s1 'layer)
+                               (slot-value s2 'layer)))))
 
 (defun make-collision-pair (entity-id other-id)
   (let ((e (p2de:make-entity)))
@@ -31,19 +60,3 @@
                         :entity-2-id other-id)))
 
 
-(defun layers-can-collide (layer-1 layer-2)
-  ;; FIXME make it declarative and automatically SYMMETRICAL
-  (cond ((eql layer-1 :bullet)
-         (eql layer-2 :asteroid))
-        
-        ((eql layer-1 :asteroid)
-         (or (eql layer-2 :bullet)
-             (eql layer-2 :ship)))
-        
-        ((eql layer-1 :ship)
-         (or (eql layer-2 :asteroid)
-             (eql layer-2 :powerup)))
-        
-        ((eql layer-1 :powerup)
-         (eql layer-2 :ship))
-        (t nil)))
