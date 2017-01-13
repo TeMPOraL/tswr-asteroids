@@ -1,5 +1,8 @@
 (in-package #:tswr-asteroids)
 
+(defparameter *cooldown-multiplier-buff* 0.5) ;FIXME should be in a more centralized location with other buff constants
+(defparameter *bullet-speed-multiplier-buff* 2.0) ;FIXME should be in a more centralized location with other buff constants
+
 (p2de:defsystem input
   (player-controlled))
 
@@ -59,8 +62,14 @@
                  buffs)
         gun
       (unless (> cooldown-left 0.0)
-        (setf cooldown-left cooldown-default)
-        (shoot-gun :position pos
-                   :bullet-velocity (p2dm:scaled-vector direction default-bullet-velocity)
-                   :bullet-type bullet-type
-                   :buffs buffs)))))
+        (let ((cooldown-multiplier (if (member :lower-cooldown buffs)
+                                       *cooldown-multiplier-buff*
+                                       1.0))
+              (speed-multiplier (if (member :faster-bullets buffs)
+                                    *bullet-speed-multiplier-buff*
+                                    1.0)))
+          (setf cooldown-left (* cooldown-multiplier cooldown-default))
+          (shoot-gun :position pos
+                     :bullet-velocity (p2dm:scaled-vector direction (* speed-multiplier default-bullet-velocity))
+                     :bullet-type bullet-type
+                     :buffs buffs))))))

@@ -31,31 +31,31 @@ Some design notes to help finalize the game.
    ALL BUFFS ARE INDEPENDENT and can be intermixed, though in some cases, a combination may be meaningless.
 
 *** Gun types
-    - machine gun - fires bullets
-    - cannon - fires explosive bullets
-    - missile launcher - fires homing missiles that aim for closest target
-    - laser - fires laser beams that can hit all targets along the beam
+    - [X] machine gun - fires bullets
+    - [ ] cannon - fires explosive bullets
+    - [ ] missile launcher - fires homing missiles that aim for closest target
+    - [ ] laser - fires laser beams that can hit all targets along the beam
 
 *** Gun buffs
     Can be equipped simultaneously.
-    - triple shot - shoots 3 bullets in spread, like: \|/.
-    - bidirectional shot - shoots additional bullet from behind
-    - faster fire - halves cooldown
-    - faster bullets - bullets move faster (not applicable to laser)
-    - big bullets - mutliplies the size of the bullet
+    - [X] triple shot - shoots 3 bullets in spread, like: \|/.
+    - [X] bidirectional shot - shoots additional bullet from behind
+    - [X] faster fire - halves cooldown
+    - [X] faster bullets - bullets move faster (not applicable to laser)
+    - [X] big bullets - mutliplies the size of the bullet
 
 *** Bullet types
-    - standard - collision = hit
-    - explosive - short range; explode on collision or decay, explosion kills everything in range
-    - fragmentary - on collision, besides destroying the target it splits into number of standard bullet shards somewhat uniformly
-    - Hanzo - like fragmentary, except fragments are fast-moving and launched in a fan, as if they bounced off the target's bounding sphere
+    - [X] standard - collision = hit
+    - [ ] explosive - short range; explode on collision or decay, explosion kills everything in range
+    - [ ] fragmentary - on collision, besides destroying the target it splits into number of standard bullet shards somewhat uniformly
+    - [ ] Hanzo - like fragmentary, except fragments are fast-moving and launched in a fan, as if they bounced off the target's bounding sphere
 
 *** Bullet buffs
-    - longer living bullets - increases (e.g. doubles) the life time of bullets
+    - [X] longer living bullets - increases (e.g. doubles) the life time of bullets
 
 *** Ship buffs
-    - shield - a shield that can resist one collision with an asteroid
-    - repulsor - pushes asteroids away a bit in a small radius around the ship
+    - [ ] shield - a shield that can resist one collision with an asteroid
+    - [ ] repulsor - pushes asteroids away a bit in a small radius around the ship
 
 ** Game rules
    - player starts with N lives

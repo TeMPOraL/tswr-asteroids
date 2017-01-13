@@ -9,6 +9,8 @@
 (defparameter *default-explosion-size* 10.0)
 
 (defparameter *triple-fire-angle-offset* (p2dm:deg->rad 30.0))
+(defparameter *bullet-life-multiplier-buff* 2.0)
+(defparameter *bullet-size-multiplier-buff* 3.0)
 
 
 ;;; Asteroids
@@ -78,7 +80,7 @@
     
     (p2de:add-component e 'gun
                         :bullet-type :standard ;:special
-                        :buffs '(:bidi-fire :triple-fire)
+                        :buffs '(:bidi-fire :triple-fire :big-bullets :longer-bullet-life :lower-cooldown :faster-bullets)
                         :cooldown-left 0.0
                         :cooldown-default 0.25) ;FIXME magic
     
@@ -138,37 +140,50 @@
                         :passthrough nil
                         :buffs buffs)
 
-    (case type
-      (:special
-       (p2de:add-component e 'collision-sphere
-                           :radius 4.0 ;FIXME (size) magic, bullet-type dependent
-                           :layer :bullet
-                           )
+    (let ((life-multiplier (if (member :longer-bullet-life buffs)
+                               *bullet-life-multiplier-buff*
+                               1.0))
+          (size-multiplier (if (member :big-bullets buffs)
+                               *bullet-size-multiplier-buff*
+                               1.0))
+          )
+      (case type
+        ;; TODO
+        ;; - :normal explosive
+        ;; - :normal fragmentary
+        ;; - :missile :explosive
+        ;; - :missile :fragmentary
+        ;; - :hanzo
+        (:special
+         (p2de:add-component e 'collision-sphere
+                             :radius (* size-multiplier 4.0) ;FIXME (size) magic, bullet-type dependent
+                             :layer :bullet
+                             )
 
-       (p2de:add-component e 'decays
-                           :life-remaining 0.5) ;FIXME (life) magic, bullet-type dependent
+         (p2de:add-component e 'decays
+                             :life-remaining (* life-multiplier 0.5)) ;FIXME (life) magic, bullet-type dependent
     
-       (p2de:add-component e 'renderable
-                           :sprite :huge-bullet
-                           :color (p2dg:make-color-4 1.0 0.0 1.0 1.0) ;TODO different types = different colors
-                           :scale 4.0   ;FIXME (size) magic, bullet-type dependent
-                           )
-       )
-      (otherwise
-       (p2de:add-component e 'collision-sphere
-                           :radius 2.0 ;FIXME (size) magic, bullet-type dependent
-                           :layer :bullet
-                           )
+         (p2de:add-component e 'renderable
+                             :sprite :huge-bullet
+                             :color (p2dg:make-color-4 1.0 0.0 1.0 1.0) ;TODO different types = different colors
+                             :scale (* size-multiplier 4.0) ;FIXME (size) magic, bullet-type dependent
+                             )
+         )
+        (otherwise
+         (p2de:add-component e 'collision-sphere
+                             :radius (* size-multiplier 2.0) ;FIXME (size) magic, bullet-type dependent
+                             :layer :bullet
+                             )
     
-       (p2de:add-component e 'decays
-                           :life-remaining 1.5) ;FIXME (life) magic, bullet-type dependent
+         (p2de:add-component e 'decays
+                             :life-remaining (* life-multiplier 1.5)) ;FIXME (life) magic, bullet-type dependent
     
-       (p2de:add-component e 'renderable
-                           :sprite :bullet
-                           :color (p2dg:make-color-4 1.0 0.0 0.0 1.0) ;TODO different types = different colors
-                           :scale 2.0   ;FIXME (size) magic, bullet-type dependent
-                           )
-       ))
+         (p2de:add-component e 'renderable
+                             :sprite :bullet
+                             :color (p2dg:make-color-4 1.0 0.0 0.0 1.0) ;TODO different types = different colors
+                             :scale (* size-multiplier 2.0) ;FIXME (size) magic, bullet-type dependent
+                             )
+         )))
     e))
 
 
