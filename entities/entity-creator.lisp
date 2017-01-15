@@ -80,7 +80,7 @@
     
     (p2de:add-component e 'gun
                         :bullet-type :standard ;:special
-                        :buffs '(:bidi-fire :triple-fire :big-bullets :longer-bullet-life :lower-cooldown :faster-bullets)
+                        :buffs '() ;(:bidi-fire :triple-fire :big-bullets :longer-bullet-life :lower-cooldown :faster-bullets)
                         :cooldown-left 0.0
                         :cooldown-default 0.25) ;FIXME magic
     
