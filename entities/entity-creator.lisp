@@ -181,8 +181,7 @@
 
 ;;; Powerups
 
-(defun spawn-powerup (position type bonus life)
-  (declare (ignore bonus))
+(defun spawn-powerup (position type life)
   (let ((e (p2de:make-entity)))
     (p2de:add-component e 'position
                         :position position)
@@ -241,10 +240,7 @@
 
 (defun debug-spawn-powerup ()
   (spawn-powerup (p2dm:make-vector-2d (random (float p2d:*canvas-width*)) (random (float p2d:*canvas-height*)))
-                 (whichever :triple-fire
-                            :bidi-fire
-                            :points)
-                 :whatever
+                 (pick-random-powerup-type)
                  10.0))
 
 
