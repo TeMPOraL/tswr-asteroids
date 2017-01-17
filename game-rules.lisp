@@ -30,16 +30,26 @@
            (kill-ship entity-1 :killer entity-2))
 
           ((powerupp entity-1)
-           (award-powerup entity-1)))))
+           (award-and-kill-powerup entity-1 :collector entity-2)))))
 
 (defun award-score (score)
   "Award `SCORE' points."
   (incf *score* score)
   (log:debug *score* score))
 
-(defun award-powerup (powerup)
+(defun award-and-kill-powerup (powerup &key collector)
   "Award `POWERUP' bonus to player."
-  (log:debug "Awarding powerup..." (slot-value powerup 'powerup-type)))
+  (let ((powerup-type (slot-value (p2de:find-component powerup 'powerup) 'powerup-type)))
+    (log:info "Awarding powerup..." powerup-type)
+    (when-let ((gives-score (p2de:find-component powerup 'gives-score)))
+      (award-score (slot-value gives-score 'score)))
+
+    (when collector
+      (when-let ((gun (p2de:find-component collector 'gun)))
+        (appendf (slot-value gun 'buffs)
+                 (list powerup-type)))))
+
+    (p2de:schedule-entity-for-deletion powerup)))
 
 (defun kill-bullet (bullet &key killer)
   (p2de:schedule-entity-for-deletion bullet))
@@ -64,6 +74,9 @@
              (bounds (p2de:find-component original-asteroid 'collision-sphere)))
     ;; TODO spawn N smaller asteroids with score = parent-score/2N
     ))
+
+(defun pick-random-powerup-type ()
+  (whichever :bidi-fire :triple-fire :big-bullets :longer-bullet-life :lower-cooldown :faster-bullets))
 
 
 ;;; Functions to check whether entity is of given game-rules type.

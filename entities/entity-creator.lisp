@@ -182,12 +182,12 @@
 ;;; Powerups
 
 (defun spawn-powerup (position type bonus life)
-  (declare (ignore type bonus))
+  (declare (ignore bonus))
   (let ((e (p2de:make-entity)))
     (p2de:add-component e 'position
                         :position position)
     
-    (p2de:add-component e 'kinematics)       ;TODO random velocity
+    (p2de:add-component e 'kinematics)  ;TODO random velocity
     
     (p2de:add-component e 'collision-sphere
                         :radius *default-powerup-size*
@@ -195,7 +195,8 @@
     
     (p2de:add-component e 'wraps-around)
     
-    (p2de:add-component e 'pickup)
+    (p2de:add-component e 'powerup
+                        :powerup-type type)
     
     (p2de:add-component e 'decays
                         :life-remaining life)
@@ -204,7 +205,7 @@
                         :score *default-powerup-score*)
     
     (p2de:add-component e 'renderable
-                        :sprite :powerup     ;TODO different types of powerups
+                        :sprite :powerup ;TODO different types of powerups
                         :color (p2dg:make-color-4 1.0 1.0 0.0 1.0)
                         :scale *default-powerup-size*)
     e))
