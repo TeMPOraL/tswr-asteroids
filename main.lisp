@@ -8,7 +8,8 @@
 (defmethod p2d:preinit ((game asteroids-game))
   ;; TODO preconfiguration (if any)
   (setf p2d:*window-title* "TSWR - Asteroids") ; FIXME maybe pass it through the game class?
-  (setf p2d:*use-fixed-timestep* t))
+  (setf p2d:*use-fixed-timestep* t)
+  (setf p2d:*window-resizable* nil))
 
 (defmethod p2d:initialize ((game asteroids-game))
   (log:info "TSWR - Asteroids game init.")
