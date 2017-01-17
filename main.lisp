@@ -21,6 +21,7 @@
 
   ;; add some systems
   (log:debug "Booting up ECS...")
+  (p2de:init-ecs)
   (initialize-systems '((input :priority 0 :type :simulation)
                         (collision-detector :priority 2 :type :simulation)
                         (collision-handler :priority 3 :type :simulation)
@@ -42,7 +43,8 @@
         systems))
 
 (defmethod p2d:deinitialize ((game asteroids-game))
-  (log:info "TSWR - Asteroids game deinit."))
+  (log:info "TSWR - Asteroids game deinit.")
+  (p2de:deinit-ecs))
 
 (defmethod p2d:on-key-event ((game asteroids-game) key state repeat)
   (macrolet ((on-key-down (scancode &body code)
