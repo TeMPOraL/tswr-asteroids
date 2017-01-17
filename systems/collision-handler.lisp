@@ -33,3 +33,4 @@
 
 (defun asteroidp (entity)
   (p2de:find-component entity 'asteroid))
+

@@ -72,25 +72,24 @@
                   (sdl2:push-event :quit)))))
 
 (defmethod p2d:on-tick ((game asteroids-game) dt)
-  ;; handled entirely by ECS for now
+  (p2de:tick-simulation-systems dt))
+
+(defmethod p2d:on-idle ((game asteroids-game) dt)
+  (declare (ignore game dt))
+  ;; Nothing to do for now.
   )
 
-(defmethod p2d:on-idle ((game asteroids-game))
-  ;; FIXME temporary hack to make ECS work together with current system
-  (gl:load-identity)
-  (gl:clear :color-buffer))
-
-(defmethod p2d:on-render ((game asteroids-game))
+(defmethod p2d:on-render ((game asteroids-game) dt)
+  (declare (ignore game))
   ;; draw stuff
-
   (gl:load-identity)
+  (gl:clear :color-buffer)
 
-  ;; handled entirely by ECS for now
+  (p2de:tick-frame-systems dt)
   
   (gl:flush)
   (sdl2:gl-swap-window p2d:*main-window*))
 
 (defun run ()
   (p2d:run (make-instance 'asteroids-game)))
-
 
