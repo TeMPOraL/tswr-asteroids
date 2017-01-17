@@ -47,14 +47,6 @@
                         :scale size)
     e))
 
-(defun spawn-child-asteroids (original-asteroid)
-  (when-let ((pos (p2de:find-component original-asteroid 'position))
-             (kinematics (p2de:find-component original-asteroid 'kinematics))
-             (score (p2de:find-component original-asteroid 'gives-score))
-             (bounds (p2de:find-component original-asteroid 'collision-sphere)))
-    ;; TODO spawn N smaller asteroids with score = parent-score/2N
-    ))
-
 
 ;;; Ships
 

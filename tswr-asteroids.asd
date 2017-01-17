@@ -37,6 +37,7 @@
                                      (:file "orientation")
                                      (:file "player-controlled")
                                      (:file "position")
+                                     (:file "powerup")
                                      (:file "renderable")
                                      (:file "ship")
                                      (:file "wraps-around")))
@@ -54,4 +55,5 @@
                                      (:file "decayer")
                                      (:file "ship-effects")
                                      (:file "renderer")))
+               (:file "game-rules")
                (:file "main")))
