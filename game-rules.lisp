@@ -49,7 +49,7 @@
         (appendf (slot-value gun 'buffs)
                  (list powerup-type)))))
 
-    (p2de:schedule-entity-for-deletion powerup)))
+    (p2de:schedule-entity-for-deletion powerup))
 
 (defun kill-bullet (bullet &key killer)
   (p2de:schedule-entity-for-deletion bullet))
