@@ -9,6 +9,8 @@
   ;; TODO preconfiguration (if any)
   (setf p2d:*window-title* "TSWR - Asteroids") ; FIXME maybe pass it through the game class?
   (setf p2d:*use-fixed-timestep* t)
+  (setf p2d:*window-width* 1024)
+  (setf p2d:*window-height* 768)
   (setf p2d:*window-resizable* nil))
 
 (defmethod p2d:initialize ((game asteroids-game))
@@ -19,6 +21,8 @@
   (gl:enable :blend)
   (gl:enable :line-smooth)
   (gl:hint :line-smooth-hint :nicest)
+  (gl:enable :polygon-smooth)
+  (gl:hint :polygon-smooth-hint :nicest)
 
   ;; add some systems
   (log:debug "Booting up ECS...")
