@@ -3,9 +3,8 @@
 (defclass asteroids-game (p2d:game)
   ())
 
-(defparameter *player-ship-entity* nil)
-
 (defparameter *default-mono-font* nil)
+(defparameter *smaller-mono-font* nil)
 
 (defmethod p2d:preinit ((game asteroids-game))
   ;; TODO preconfiguration (if any)
@@ -42,14 +41,13 @@
 
   ;; Load additional resources needed
   (setf *default-mono-font* (p2dg:get-rendered-font "assets/fonts/VeraMoBd.ttf" :size 16))
+  (setf *smaller-mono-font* (p2dg:get-rendered-font "assets/fonts/VeraMono.ttf" :size 12))
 
   ;; Initialize game
   (clear-game-state)
   
   ;; Spawn some entities
-  (spawn-asteroid (p2dm:make-vector-2d 600.0 400.0) 40 (p2dm:make-vector-2d 40.0 60.0))
-  (spawn-asteroid (p2dm:make-vector-2d 200.0 300.0) 30 (p2dm:make-vector-2d -50.0 45.0))
-  (setf *player-ship-entity* (spawn-ship (p2dm:make-vector-2d 200.0 400.0))))
+  (set-up-entities-for-level))
 
 (defun initialize-systems (systems)
   (mapc (lambda (system-definition)
@@ -59,6 +57,7 @@
 (defmethod p2d:deinitialize ((game asteroids-game))
   (log:info "TSWR - Asteroids game deinit.")
 
+  (p2dg:free-font *smaller-mono-font*)
   (p2dg:free-font *default-mono-font*)
   
   (p2de:deinit-ecs))
@@ -109,7 +108,12 @@
    (p2dg::draw-text (format nil "~10D" (floor *score*))
                     :font *default-mono-font*
                     :x 680
-                    :y 580)) 
+                    :y 580))
+  (p2dg:with-color (1 1 1)
+    (p2dg::draw-text (format nil "High score: ~10D" (floor *high-score*))
+                     :font *smaller-mono-font*
+                     :x 600
+                     :y 560))
   
   (gl:flush)
   (sdl2:gl-swap-window p2d:*main-window*))

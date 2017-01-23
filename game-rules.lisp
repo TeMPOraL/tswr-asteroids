@@ -35,6 +35,8 @@
 (defun award-score (score)
   "Award `SCORE' points."
   (incf *score* score)
+  (when (> *score* *high-score*)
+    (setf *high-score* *score*))
   (log:debug *score* score))
 
 (defun award-and-kill-powerup (powerup &key collector)
@@ -56,11 +58,18 @@
 
 (defun kill-asteroid (asteroid &key killer)
   (spawn-child-asteroids asteroid)
+  
   (when-let ((points (p2de:find-component asteroid 'gives-score)))
     (when (bulletp killer)
       (award-score (slot-value points 'score))))
 
-  ;; TODO maybe spawn powerup
+  (when-let ((position (p2de:find-component asteroid 'position))
+             (powerup (p2de:find-component asteroid 'drops-powerup)))
+    (when (> (p2dm:random-float) (slot-value powerup 'chance))
+      (spawn-powerup (slot-value position 'position)
+                     (pick-random-powerup-type) ;FIXME determined by asteroid
+                     10                 ;FIXME magic
+                     )))
   
   (p2de:schedule-entity-for-deletion asteroid))
 
@@ -92,3 +101,20 @@
 
 (defun powerupp (entity)
   (p2de:find-component entity 'powerup))
+
+
+;;; Setting up game levels
+(defun set-up-entities-for-level ()
+  ;; Spawn some random asteroids in the vicinity of player.
+  (dotimes (i 10)
+    (let ((r (p2dm:random-float 100.0 200.0))
+          (theta-pos (p2dm:random-float 0.0 p2dm:+2pi+))
+          (speed (p2dm:random-float 1.0 70.0))
+          (theta-vel (p2dm:random-float 0.0 p2dm:+2pi+)))
+      (spawn-asteroid (p2dm:rotated-vector-2d (p2dm:make-vector-2d r 0.0) theta-pos)
+                      50
+                      (p2dm:rotated-vector-2d (p2dm:make-vector-2d speed 0.0) theta-vel))))
+
+  ;; Spawn player ship in the centre.
+  (spawn-ship (p2dm:make-vector-2d 400.0 300.0)))
+
