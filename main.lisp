@@ -5,6 +5,8 @@
 
 (defparameter *player-ship-entity* nil)
 
+(defparameter *default-mono-font* nil)
+
 (defmethod p2d:preinit ((game asteroids-game))
   ;; TODO preconfiguration (if any)
   (setf p2d:*window-title* "TSWR - Asteroids") ; FIXME maybe pass it through the game class?
@@ -23,6 +25,7 @@
   (gl:hint :line-smooth-hint :nicest)
   (gl:enable :polygon-smooth)
   (gl:hint :polygon-smooth-hint :nicest)
+  (gl:enable :texture-2d)
 
   ;; add some systems
   (log:debug "Booting up ECS...")
@@ -36,8 +39,14 @@
                         (decayer :priority 30 :type :simulation)
                         (ship-effects :priority 40 :type :simulation)
                         (renderer :priority 50 :type :frame)))
+
+  ;; Load additional resources needed
+  (setf *default-mono-font* (p2dg:get-rendered-font "assets/fonts/VeraMoBd.ttf" :size 16))
+
+  ;; Initialize game
+  (clear-game-state)
   
-  ;; and an entity
+  ;; Spawn some entities
   (spawn-asteroid (p2dm:make-vector-2d 600.0 400.0) 40 (p2dm:make-vector-2d 40.0 60.0))
   (spawn-asteroid (p2dm:make-vector-2d 200.0 300.0) 30 (p2dm:make-vector-2d -50.0 45.0))
   (setf *player-ship-entity* (spawn-ship (p2dm:make-vector-2d 200.0 400.0))))
@@ -49,6 +58,9 @@
 
 (defmethod p2d:deinitialize ((game asteroids-game))
   (log:info "TSWR - Asteroids game deinit.")
+
+  (p2dg:free-font *default-mono-font*)
+  
   (p2de:deinit-ecs))
 
 (defmethod p2d:on-key-event ((game asteroids-game) key state repeat)
@@ -90,6 +102,14 @@
   (gl:clear :color-buffer)
 
   (p2de:tick-frame-systems dt)
+
+  ;; Draw UI
+  ;; FIXME move somewhere else
+  (p2dg:with-color (0 1 0)
+   (p2dg::draw-text (format nil "~10D" (floor *score*))
+                    :font *default-mono-font*
+                    :x 680
+                    :y 580)) 
   
   (gl:flush)
   (sdl2:gl-swap-window p2d:*main-window*))
