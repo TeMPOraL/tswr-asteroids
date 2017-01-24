@@ -5,7 +5,7 @@
   :serial t
   :long-name "TSW Redux - Asteroids"
   :author "Jacek Złydach"
-  :version (:read-file-from "version.lisp" :at (1 2 2))
+  :version (:read-file-form "version.lisp" :at (1 2 2))
   :description "A toy game."
                                         ; :long-description "todo"
 
