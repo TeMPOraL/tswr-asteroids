@@ -4,5 +4,6 @@
 
   (:shadow #:position)                  ;no better solution for now
 
-  (:export #:run))
+  (:export #:run
+           #:run-with-profiling))
 

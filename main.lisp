@@ -121,3 +121,6 @@
 (defun run ()
   (p2d:run (make-instance 'asteroids-game)))
 
+(defun run-with-profiling ()
+  #+sbcl(p2d:run-with-profiling (make-instance 'asteroids-game))
+  #-sbcl (error "Profiling currently not supported on this Lisp implementation."))
