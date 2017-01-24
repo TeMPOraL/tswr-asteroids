@@ -54,6 +54,7 @@
     (p2de:schedule-entity-for-deletion powerup))
 
 (defun kill-bullet (bullet &key killer)
+  (declare (ignore killer))
   (p2de:schedule-entity-for-deletion bullet))
 
 (defun kill-asteroid (asteroid &key killer)
