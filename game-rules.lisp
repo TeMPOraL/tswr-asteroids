@@ -8,7 +8,11 @@
 (defvar *score* 0)
 (defvar *high-score* 0)
 
-(defparameter +starting-asteroid-size+ 42)
+(defparameter +starting-asteroid-size+ 48)
+(defparameter +default-powerup-life+ 10)
+(defparameter +asteroid-children+ 4 "How many pieces an asteroids splits into.")
+(defparameter +minimum-asteroid-size+ 10 "We don't spawn asteroids smaller than this.")
+(defparameter +default-asteroid-spread-speed+ 16 "Speed at which asteroids spread out.")
 
 (defun clear-game-state ()
   "Clear all state related to main game and its rules."
@@ -60,32 +64,45 @@
   (p2de:schedule-entity-for-deletion bullet))
 
 (defun kill-asteroid (asteroid &key killer)
-  (spawn-child-asteroids asteroid)
-  
+  (maybe-spawn-child-asteroids asteroid)
+
   (when-let ((points (p2de:find-component asteroid 'gives-score)))
     (when (bulletp killer)
       (award-score (slot-value points 'score))))
 
   (when-let ((position (p2de:find-component asteroid 'position))
              (powerup (p2de:find-component asteroid 'drops-powerup)))
-    (when (> (p2dm:random-float) (slot-value powerup 'chance))
+    (when (< (p2dm:random-float) (slot-value powerup 'chance))
       (spawn-powerup (slot-value position 'position)
                      (pick-random-powerup-type) ;FIXME determined by asteroid
-                     10                 ;FIXME magic
-                     )))
+                     +default-powerup-life+)))
   
   (p2de:schedule-entity-for-deletion asteroid))
 
 (defun kill-ship (ship &key killer)
   (log:info "Oops, you're dead. ~A killed by ~A." ship killer))
 
-(defun spawn-child-asteroids (original-asteroid)
-  (when-let ((pos (p2de:find-component original-asteroid 'position))
-             (kinematics (p2de:find-component original-asteroid 'kinematics))
-             (score (p2de:find-component original-asteroid 'gives-score))
-             (bounds (p2de:find-component original-asteroid 'collision-sphere)))
-    ;; TODO spawn N smaller asteroids with score = parent-score/2N
-    ))
+(defun maybe-spawn-child-asteroids (original-asteroid)
+  (flet ((noise-up-angle (angle)
+           (+ angle (p2dm:random-float -1 1)))
+         (noise-up-speed (speed)
+           (+ speed (p2dm:random-float 0.0 (float (/ speed 2))))))
+
+    (when-let ((pos (p2de:find-component original-asteroid 'position))
+               (kinematics (p2de:find-component original-asteroid 'kinematics))
+               (score (p2de:find-component original-asteroid 'gives-score))
+               (bounds (p2de:find-component original-asteroid 'collision-sphere)))
+      ;; TODO spawn N smaller asteroids with score = parent-score/2N
+      (let* ((original-size (slot-value bounds 'radius))
+             (original-position (slot-value pos 'position))
+             (child-size (floor (/ original-size 2))))
+        (when (> child-size +minimum-asteroid-size+)
+          (dotimes (n +asteroid-children+)
+            (spawn-asteroid original-position
+                            child-size
+                            (p2dm:scaled-vector (p2dm:rotated-vector-2d (p2dm:make-vector-2d 0.0 1.0)
+                                                                        (noise-up-angle (coerce (* n (/ p2dm:+2pi+ +asteroid-children+)) 'p2dm:standard-float)))
+                                                (noise-up-speed +default-asteroid-spread-speed+)))))))))
 
 (defun pick-random-powerup-type ()
   (whichever :bidi-fire :triple-fire :big-bullets :longer-bullet-life :lower-cooldown :faster-bullets))

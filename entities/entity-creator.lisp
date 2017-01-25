@@ -18,13 +18,13 @@
 (defun spawn-asteroid (position size velocity)
   (let ((e (p2de:make-entity)))
     (p2de:add-component e 'position
-                        :position position)
+                        :position (p2dm:scaled-vector position 1.0))
     
     (p2de:add-component e 'orientation
                         :orientation (p2dm:random-float 0.0 p2dm:+2pi+))
     
     (p2de:add-component e 'kinematics
-                        :velocity velocity
+                        :velocity (p2dm:scaled-vector velocity 1.0)
                         :angular-velocity (p2dm:random-float -1.0 1.0))
     
     (p2de:add-component e 'collision-sphere

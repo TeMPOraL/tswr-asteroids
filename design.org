@@ -68,3 +68,10 @@ Some design notes to help finalize the game.
      - asteroid spawn frequency, starting size and starting speed increases with game time
    - game has no win condition - you fight until you die
 
+** Bugs to fix
+*** BUG Collision handling fires multiple time per frame for an object if it collides with several other
+    This way, one bullet can destroy a bunch of asteroids at the same time.
+    Should not happen by default, IMO. Or at least, not for normal bullets.
+
+    IMO best way would be to mark standard bullets as "dead" in collision handling,
+    and reject further collision pairs in which a "dead" bullet shows up.
