@@ -26,9 +26,10 @@
   ;; SHOOTING
   (when-let ((gun (p2de:find-component entity 'gun))
              (position (p2de:find-component entity 'position))
-             (orientation (p2de:find-component entity 'orientation)))
+             (orientation (p2de:find-component entity 'orientation))
+             (kinematics (p2de:find-component entity 'kinematics)))
     (when (key-pressed-p :scancode-space)
-      (shoot gun position orientation))))
+      (shoot gun position orientation kinematics))))
 
 
 (defun key-pressed-p (scancode)
@@ -52,9 +53,11 @@
   (setf (slot-value kinematics 'angular-velocity)
         (p2dm:deg->rad (* 180.0 angle-sign))))
 
-(defun shoot (gun position orientation)
+;;; FIXME code of #'shoot should totally be in game rules, not input handler
+(defun shoot (gun position orientation kinematics)
   (let ((direction (orientation-value->direction (slot-value orientation 'orientation)))
-        (pos (slot-value position 'position)))
+        (pos (slot-value position 'position))
+        (shooter-vel (slot-value kinematics 'velocity)))
     (with-slots (cooldown-left
                  cooldown-default
                  bullet-type
@@ -62,14 +65,16 @@
                  buffs)
         gun
       (unless (> cooldown-left 0.0)
-        (let ((cooldown-multiplier (if (member :lower-cooldown buffs)
-                                       *cooldown-multiplier-buff*
-                                       1.0))
-              (speed-multiplier (if (member :faster-bullets buffs)
-                                    *bullet-speed-multiplier-buff*
-                                    1.0)))
+        (let* ((cooldown-multiplier (if (member :lower-cooldown buffs)
+                                        *cooldown-multiplier-buff*
+                                        1.0))
+               (speed-multiplier (if (member :faster-bullets buffs)
+                                     *bullet-speed-multiplier-buff*
+                                     1.0))
+               (bullet-velocity (p2dm:add-vectors shooter-vel
+                                                  (p2dm:scaled-vector direction (* speed-multiplier default-bullet-velocity)))))
           (setf cooldown-left (* cooldown-multiplier cooldown-default))
           (shoot-gun :position pos
-                     :bullet-velocity (p2dm:scaled-vector direction (* speed-multiplier default-bullet-velocity))
+                     :bullet-velocity bullet-velocity
                      :bullet-type bullet-type
                      :buffs buffs))))))
