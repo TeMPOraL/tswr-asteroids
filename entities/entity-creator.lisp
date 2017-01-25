@@ -42,7 +42,7 @@
     (p2de:add-component e 'drops-powerup
                         :chance *asteroid-powerup-drop-chance*)
     (p2de:add-component e 'renderable
-                        :sprite :asteroid
+                        :sprite (make-asteroid-sprite)
                         :color (p2dg:make-color-4 1.0 1.0 1.0 1.0)
                         :scale size)
     e))

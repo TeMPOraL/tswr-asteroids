@@ -39,19 +39,26 @@
 
 (defun draw-pseudo-sprite (sprite)
   "Pseudo because it's not really a `SPRITE', but rather immediate-mode geometry."
-  (case sprite
-    (:asteroid (p2dglu:draw-regular-polygon-outline 7))
-    (:ship (gl:scale 1 1.5 1)
-           (p2dglu:draw-triangle))
-    (:ship-accelerating (gl:scale 1 1.5 1)
-                        (p2dglu:draw-triangle)
-                        (gl:scale 0.5 1.5 0.5)
-                        (p2dglu:draw-triangle))
-    (:bullet (p2dglu:draw-circle-outline :resolution 16))
-    (:powerup (p2dglu:rotatez* (p2dm:deg->rad 45.0))
-              (p2dglu:scale2-uniform 0.75)
-              (p2dglu:draw-square-outline))
-    (t (p2dglu:draw-square))))
+  (flet ((draw-predefined-sprite (predefined-sprite)
+           (case predefined-sprite
+             (:asteroid (p2dglu:draw-regular-polygon-outline 7))
+             (:ship (gl:scale 1 1.5 1)
+                    (p2dglu:draw-triangle))
+             (:ship-accelerating (gl:scale 1 1.5 1)
+                                 (p2dglu:draw-triangle)
+                                 (gl:scale 0.5 1.5 0.5)
+                                 (p2dglu:draw-triangle))
+             (:bullet (p2dglu:draw-circle-outline :resolution 16))
+             (:powerup (p2dglu:rotatez* (p2dm:deg->rad 45.0))
+                       (p2dglu:scale2-uniform 0.75)
+                       (p2dglu:draw-square-outline))
+             (t (p2dglu:draw-square))))
+         (draw-functional-sprite (fun-sprite)
+           (funcall fun-sprite)))
+    (cond ((keywordp sprite)
+           (draw-predefined-sprite sprite))
+          ((functionp sprite)
+           (draw-functional-sprite sprite)))))
 
 (defun draw-vector-marker-to-point (point)
   "Draws a vector marker from (0 0) to `POINT'."
@@ -69,3 +76,22 @@
 
 (defun renderer-toggle-debug-collision ()
   (setf *debug-render-collision* (not *debug-render-collision*)))
+
+
+;;; MAGIC
+
+(defun make-asteroid-sprite ()
+  (flet ((noise-fun ()
+           (- 1.0 (p2dm:random-float -0.1 0.1))))
+   (let* ((polygon-sides (+ 32 (random 32)))
+          (step-angle (coerce (/ p2dm:+2pi+ polygon-sides) 'p2dm:standard-float))
+          (vertex-pairs '()))
+     (dotimes (step polygon-sides)
+       (let ((noise-val (noise-fun)))
+        (push (cons (* noise-val (cos (* step step-angle)))
+                    (* noise-val (sin (* step step-angle))))
+              vertex-pairs)))
+     (lambda ()
+       (gl:with-primitive :line-loop
+         (dolist (point vertex-pairs)
+           (gl:vertex (car point) (cdr point))))))))
