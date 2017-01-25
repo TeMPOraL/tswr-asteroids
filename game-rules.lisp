@@ -8,6 +8,8 @@
 (defvar *score* 0)
 (defvar *high-score* 0)
 
+(defparameter +starting-asteroid-size+ 42)
+
 (defun clear-game-state ()
   "Clear all state related to main game and its rules."
   (setf *lives* +default-lives+
@@ -113,7 +115,7 @@
           (speed (p2dm:random-float 1.0 70.0))
           (theta-vel (p2dm:random-float 0.0 p2dm:+2pi+)))
       (spawn-asteroid (p2dm:rotated-vector-2d (p2dm:make-vector-2d r 0.0) theta-pos)
-                      50
+                      +starting-asteroid-size+
                       (p2dm:rotated-vector-2d (p2dm:make-vector-2d speed 0.0) theta-vel))))
 
   ;; Spawn player ship in the centre.

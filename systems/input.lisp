@@ -65,16 +65,15 @@
                  buffs)
         gun
       (unless (> cooldown-left 0.0)
-        (let* ((cooldown-multiplier (if (member :lower-cooldown buffs)
-                                        *cooldown-multiplier-buff*
-                                        1.0))
-               (speed-multiplier (if (member :faster-bullets buffs)
-                                     *bullet-speed-multiplier-buff*
-                                     1.0))
-               (bullet-velocity (p2dm:add-vectors shooter-vel
-                                                  (p2dm:scaled-vector direction (* speed-multiplier default-bullet-velocity)))))
+        (let ((cooldown-multiplier (if (member :lower-cooldown buffs)
+                                       *cooldown-multiplier-buff*
+                                       1.0))
+              (speed-multiplier (if (member :faster-bullets buffs)
+                                    *bullet-speed-multiplier-buff*
+                                    1.0)))
           (setf cooldown-left (* cooldown-multiplier cooldown-default))
           (shoot-gun :position pos
-                     :bullet-velocity bullet-velocity
+                     :bullet-velocity (p2dm:scaled-vector direction (* speed-multiplier default-bullet-velocity))
+                     :shooter-velocity shooter-vel
                      :bullet-type bullet-type
                      :buffs buffs))))))

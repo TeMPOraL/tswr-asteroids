@@ -2,7 +2,7 @@
 
 (defparameter *base-asteroid-score* 1000) ;TODO move to game-rules, or sth.
 (defparameter *asteroid-powerup-drop-chance* 0.05) ;TODO move to game-rules, or sth.
-(defparameter *default-ship-size* 10)   ;TODO move to game-rules, or sth.
+(defparameter *default-ship-size* 8)   ;TODO move to game-rules, or sth.
 (defparameter *default-powerup-size* 20)   ;TODO move to game-rules, or sth.
 (defparameter *default-powerup-score* 2000)   ;TODO move to game-rules, or sth.
 (defparameter *default-explosion-life* 1.0)
@@ -97,7 +97,7 @@
     
     e))
 
-(defun shoot-gun (&key position bullet-velocity bullet-type buffs)
+(defun shoot-gun (&key position bullet-velocity shooter-velocity bullet-type buffs)
   (let ((bullets-to-fire-velocities (list bullet-velocity)))
     ;; Apply gun buffs to number/parameters of launched projectiles.
     (when (member :triple-fire buffs)
@@ -118,7 +118,7 @@
     ;; Actually shoot bullets.
     (mapc (lambda (vel)
             (shoot-bullet :position position
-                          :velocity vel
+                          :velocity (p2dm:add-vectors vel shooter-velocity)
                           :type bullet-type
                           :buffs buffs))
           bullets-to-fire-velocities)))
