@@ -33,7 +33,7 @@
                         (collision-detector :priority 2 :type :simulation)
                         (collision-handler :priority 3 :type :simulation)
                         (basic-physics :priority 10 :type :simulation)
-                        (game-area-wrapper :priority 15 :type :simulation)
+                        (game-area-customs :priority 15 :type :simulation)
                         (gun-cooldown-updater :priority 20 :type :simulation)
                         (decayer :priority 30 :type :simulation)
                         (ship-effects :priority 40 :type :simulation)

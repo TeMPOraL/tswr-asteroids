@@ -34,7 +34,7 @@
     (p2de:add-component e 'asteroid
                         )
     
-    (p2de:add-component e 'wraps-around)
+    (p2de:add-component e 'game-area-border-policy :policy :wraps-around)
     
     (p2de:add-component e 'gives-score
                         :score (/ *base-asteroid-score* size))
@@ -66,7 +66,7 @@
                         :radius *default-ship-size*
                         :layer :ship)
     
-    (p2de:add-component e 'wraps-around)
+    (p2de:add-component e 'game-area-border-policy :policy :wraps-around)
     
     (p2de:add-component e 'ship)
     
@@ -93,7 +93,7 @@
                         :position (p2dm:scaled-vector position 1.0))
     (p2de:add-component e 'kinematics
                         :velocity (p2dm:scaled-vector velocity 1.0))
-    ;; (p2de:add-component e 'wraps-around) ; <-- uncomment to have bullets wrap around the playing field
+    (p2de:add-component e 'game-area-border-policy :policy :dies)
     e))
 
 (defun shoot-gun (&key position bullet-velocity shooter-velocity bullet-type buffs)
@@ -191,7 +191,7 @@
                         :radius *default-powerup-size*
                         :layer :powerup)
     
-    (p2de:add-component e 'wraps-around)
+    ;; (p2de:add-component e 'game-area-border-policy :policy :wraps-around) <-- don't need that as powerups are stationary anyway
     
     (p2de:add-component e 'powerup
                         :powerup-type type)

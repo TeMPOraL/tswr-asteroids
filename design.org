@@ -16,7 +16,8 @@ Some design notes to help finalize the game.
 **** TODO Improve collision detection efficiency
      At least eliminate that stupid N^2 thingy.
 
-**** TODO Make bullets die immediately if not wrapped-around
+**** DONE Make bullets die immediately if not wrapped-around
+     CLOSED: [2017-01-27 pią 22:32]
      That should significantly save on computation
 
 **** DONE Death == reset playing area

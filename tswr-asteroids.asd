@@ -31,6 +31,7 @@
                                      (:file "collision-sphere")
                                      (:file "decays")
                                      (:file "drops-powerup")
+                                     (:file "game-area-border-policy")
                                      (:file "gives-score")
                                      (:file "gun")
                                      (:file "kinematics")
@@ -39,8 +40,7 @@
                                      (:file "position")
                                      (:file "powerup")
                                      (:file "renderable")
-                                     (:file "ship")
-                                     (:file "wraps-around")))
+                                     (:file "ship")))
 
                (:module "entities"
                         :components ((:file "entity-creator")))
@@ -50,7 +50,7 @@
                                      (:file "basic-physics")
                                      (:file "collision-detector")
                                      (:file "collision-handler")
-                                     (:file "game-area-wrapper")
+                                     (:file "game-area-customs")
                                      (:file "gun-cooldown-updater")
                                      (:file "decayer")
                                      (:file "ship-effects")
