@@ -3,6 +3,71 @@
 
 Some design notes to help finalize the game.
 
+
+* Roadmap / plan
+
+** Schedule
+*** <2017-01-27 pią>--<2017-01-29 nie>
+
+**** DOING Try playing with various wrap-around settings
+     - [X] no wrap-around for bullets
+     - [ ] no wrap-around for ships (dies on hitting border)
+
+**** TODO Improve collision detection efficiency
+     At least eliminate that stupid N^2 thingy.
+
+**** DONE Death == reset playing area
+     CLOSED: [2017-01-27 pią 01:33]
+     Don't forget to reset scores
+
+*** <2017-01-30 pon>--<2017-02-05 nie>
+
+**** TODO Add lives
+
+**** TODO 1-up powerup
+
+**** TODO Add graphics for powerups that would let you distinguish between them
+
+**** TODO All asteroids killed = spawn new (more)
+     Add a ramping-up difficulty
+
+**** TODO Implement laser
+
+** Task staging ground
+   I.e. unscheduled yet.
+
+*** TODO Find some sounds and add them
+    - [ ] bullet shot
+    - [ ] triple shot
+    - [ ] asteroid hit
+    - [ ] powerup collected
+    - [ ] ship destroyed
+
+*** TODO Try out continuously spawning asteroids instead
+
+*** TODO Think of aesthetics you could use for the game
+
+*** TODO Implement explosive bullets
+
+*** TODO Implement missile launcher
+
+*** TODO Implement shields
+
+*** TODO Implement Hanzo bullets
+
+*** TODO Implement a more complicated movement mechanic
+    I.e. thruster mechanic using numpad.
+
+*** TODO Implement a more smooth turning physics
+    Try basing turning on rotational acceleration + friction.
+
+*** TODO Try and make a continous collision detection algo
+    Or that magic w/ Minkowski algebra. Anyway, something to avoid fast bullets passing through objects.
+
+*** TODO Profile game and improve its efficiency
+
+*** TODO Make a release bundle for Linux and Windows
+
 * Main game
 ** UI elements
    - lives remaining

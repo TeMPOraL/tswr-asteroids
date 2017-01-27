@@ -8,6 +8,8 @@
 (defvar *score* 0)
 (defvar *high-score* 0)
 
+(defvar *game-over* t "T if game is not running (e.g. player just died), nil if running.")
+
 (defparameter +starting-asteroid-size+ 48)
 (defparameter +default-powerup-life+ 10)
 (defparameter +asteroid-children+ 4 "How many pieces an asteroids splits into.")
@@ -80,7 +82,8 @@
   (p2de:schedule-entity-for-deletion asteroid))
 
 (defun kill-ship (ship &key killer)
-  (log:info "Oops, you're dead. ~A killed by ~A." ship killer))
+  (log:info "Oops, you're dead. ~A killed by ~A." ship killer)
+  (reset-game-after-death))
 
 (defun maybe-spawn-child-asteroids (original-asteroid)
   (flet ((noise-up-angle (angle)
@@ -124,6 +127,11 @@
 
 
 ;;; Setting up game levels
+(defun start-game ()
+  (set-up-entities-for-level)
+  (clear-game-state)
+  (setf *game-over* nil))
+
 (defun set-up-entities-for-level ()
   ;; Spawn some random asteroids in the vicinity of player.
   (dotimes (i 10)
@@ -138,3 +146,7 @@
   ;; Spawn player ship in the centre.
   (spawn-ship (p2dm:make-vector-2d 400.0 300.0)))
 
+(defun reset-game-after-death ()
+  ;; TODO clear all entities
+  (p2de:schedule-all-entities-for-deletion)
+  (setf *game-over* t))

@@ -43,11 +43,7 @@
   (setf *default-mono-font* (p2dg:get-rendered-font "assets/fonts/VeraMoBd.ttf" :size 16))
   (setf *smaller-mono-font* (p2dg:get-rendered-font "assets/fonts/VeraMono.ttf" :size 12))
 
-  ;; Initialize game
-  (clear-game-state)
-  
-  ;; Spawn some entities
-  (set-up-entities-for-level))
+  (setf *game-over* t))
 
 (defun initialize-systems (systems)
   (mapc (lambda (system-definition)
@@ -87,6 +83,8 @@
                   (sdl2:push-event :quit)))))
 
 (defmethod p2d:on-tick ((game asteroids-game) dt)
+  (when *game-over*
+    (start-game))
   (p2de:tick-simulation-systems dt))
 
 (defmethod p2d:on-idle ((game asteroids-game) dt)

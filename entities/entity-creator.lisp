@@ -93,8 +93,7 @@
                         :position (p2dm:scaled-vector position 1.0))
     (p2de:add-component e 'kinematics
                         :velocity (p2dm:scaled-vector velocity 1.0))
-    (p2de:add-component e 'wraps-around)
-    
+    ;; (p2de:add-component e 'wraps-around) ; <-- uncomment to have bullets wrap around the playing field
     e))
 
 (defun shoot-gun (&key position bullet-velocity shooter-velocity bullet-type buffs)
