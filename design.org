@@ -16,6 +16,9 @@ Some design notes to help finalize the game.
 **** TODO Improve collision detection efficiency
      At least eliminate that stupid N^2 thingy.
 
+**** TODO Make bullets die immediately if not wrapped-around
+     That should significantly save on computation
+
 **** DONE Death == reset playing area
      CLOSED: [2017-01-27 pią 01:33]
      Don't forget to reset scores
@@ -140,3 +143,11 @@ Some design notes to help finalize the game.
 
     IMO best way would be to mark standard bullets as "dead" in collision handling,
     and reject further collision pairs in which a "dead" bullet shows up.
+
+*** BUG Sometimes you respawn with asteroids that just start to split
+    Theory: if you die in the same frame an asteroid is about to be torn apart,
+    child asteroids are spawned *after* all other entities are marked for deletion,
+    leading to those children remaining.
+
+    Could fire up additional #'p2de:schedule-all-entities-for-deletion and hope the player
+    won't notice one frame of invalid game state, but I would prefer a cleaner solution.
