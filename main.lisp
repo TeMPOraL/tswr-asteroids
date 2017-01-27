@@ -18,6 +18,8 @@
   (log:info "TSWR - Asteroids game init.")
   (gl:clear-color 0.0 0.0 0.0 1.0)
 
+  ;; (sdl2:gl-set-swap-interval 0) <-- use to disable vsync
+
   (gl:blend-func :src-alpha :one-minus-src-alpha)
   (gl:enable :blend)
   (gl:enable :line-smooth)
