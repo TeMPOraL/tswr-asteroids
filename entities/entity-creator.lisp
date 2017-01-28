@@ -59,7 +59,7 @@
                         :orientation (p2dm:random-float 0 p2dm:+2pi+))
     
     (p2de:add-component e 'kinematics
-                        :speed-limit 400.0
+                        :speed-limit 150.0
                         :rotation-speed-limit p2dm:+2pi+)
     
     (p2de:add-component e 'collision-sphere

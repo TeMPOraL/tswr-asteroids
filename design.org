@@ -52,6 +52,8 @@ Some design notes to help finalize the game.
 **** TODO 1-up powerup
 
 **** TODO Add graphics for powerups that would let you distinguish between them
+     Maybe something simple / with color. Since we have text capabilities now, we can draw letters instead / in addition of
+     of the yellow triangle.
 
 **** TODO All asteroids killed = spawn new (more)
      Add a ramping-up difficulty
@@ -177,3 +179,20 @@ Some design notes to help finalize the game.
 
     Could fire up additional #'p2de:schedule-all-entities-for-deletion and hope the player
     won't notice one frame of invalid game state, but I would prefer a cleaner solution.
+
+* Playtesting ideas
+
+** Tess
+   <2017-01-28 sob>
+   - [ ] negatywne bonusy
+   - [ ] bonusy pytajniki (nie wiadomo czy pozytywny czy negatywny)
+   - [X] zmniejszyć max szybkość statku
+   - [ ] lepsze bronie dostępne z kolejnymi poziomami
+   - [ ] rozpadanie się asteroid na późniejszym poziomie
+   - [ ] miganie powerupów przed decayem
+   - [ ] tymczasowa osłona po respawnie przy stracie życia
+   - [ ] alternatywa: zamiast żyć, pasek energii
+     - większa asteroida = większy damage
+     - asteroida nie umiera od zderzenia
+     - [my idea] może im szybciej tym większy damage?
+     - [my idea] also: odbicie się od asteroidy (niesprężyste, ale zawsze) - może być fajna mechanika gry :D
