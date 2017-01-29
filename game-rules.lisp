@@ -59,11 +59,20 @@
       (award-score (slot-value gives-score 'score)))
 
     (when collector
-      (when-let ((gun (p2de:find-component collector 'gun)))
-        (appendf (slot-value gun 'buffs)
-                 (list powerup-type)))))
+      (cond ((powerup-for-gun powerup-type)
+             (when-let ((gun (p2de:find-component collector 'gun)))
+               (appendf (slot-value gun 'buffs)
+                        (list powerup-type))))
+            (t (award-generic-powerup powerup-type)))))
 
-    (p2de:schedule-entity-for-deletion powerup))
+  (p2de:schedule-entity-for-deletion powerup))
+
+(defun award-generic-powerup (type)
+  (when (eql type :1up)
+    (incf *lives*)))
+
+(defun powerup-for-gun (type)
+  (not (eql type :1up)))
 
 (defun kill-bullet (bullet &key killer)
   (declare (ignore killer))
@@ -120,7 +129,7 @@
                                                 (noise-up-speed +default-asteroid-spread-speed+)))))))))
 
 (defun pick-random-powerup-type ()
-  (whichever :bidi-fire :triple-fire :big-bullets :longer-bullet-life :lower-cooldown :faster-bullets))
+  (whichever :bidi-fire :triple-fire :big-bullets :longer-bullet-life :lower-cooldown :faster-bullets :1up))
 
 
 ;;; Functions to check whether entity is of given game-rules type.

@@ -52,7 +52,8 @@ Some design notes to help finalize the game.
      - [X] need a "respawn" function that doesn't clear the map
      - [X] will probably need to introduce a temporary "respawn shield" that makes the ship invulnerable for a second or two
 
-**** TODO 1-up powerup
+**** DONE 1-up powerup
+     CLOSED: [2017-01-29 nie 15:19]
 
 **** TODO Add graphics for powerups that would let you distinguish between them
      Maybe something simple / with color. Since we have text capabilities now, we can draw letters instead / in addition of
@@ -193,7 +194,7 @@ Some design notes to help finalize the game.
    - [ ] lepsze bronie dostępne z kolejnymi poziomami
    - [ ] rozpadanie się asteroid na późniejszym poziomie
    - [ ] miganie powerupów przed decayem
-   - [ ] tymczasowa osłona po respawnie przy stracie życia
+   - [X] tymczasowa osłona po respawnie przy stracie życia
    - [ ] alternatywa: zamiast żyć, pasek energii
      - większa asteroida = większy damage
      - asteroida nie umiera od zderzenia
