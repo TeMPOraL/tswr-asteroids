@@ -92,6 +92,9 @@
     (start-game))
   (p2de:tick-simulation-systems dt)
 
+  (when (> *respawn-shield-remaining* 0)
+    (decf *respawn-shield-remaining* dt))
+
   (setf *debug-max-collision-checks-per-tick* (max *debug-max-collision-checks-per-tick* *debug-collision-checks-per-tick*)
         *debug-max-entities* (max *debug-max-entities* (hash-table-count (p2de::entities p2de::*ecs-manager*))))
   (setf *debug-collision-checks-per-tick* 0))
@@ -111,6 +114,7 @@
 
   ;; Draw UI
   ;; FIXME move somewhere else
+  ;; Score
   (p2dg:with-color (0 1 0)
    (p2dg::draw-text (format nil "~10D" (floor *score*))
                     :font *default-mono-font*
@@ -121,6 +125,16 @@
                      :font *smaller-mono-font*
                      :x 600
                      :y 560))
+
+  ;; Lives
+  (p2dg:with-color (1 1 0)
+    (dotimes (i *lives*)
+      (gl:with-pushed-matrix
+        (gl:translate (+ 10 (* i 20))
+                      580
+                      0)
+        (gl:scale 6 9 6)
+        (p2dglu:draw-triangle-outline))))
   
   (gl:flush)
   (sdl2:gl-swap-window p2d:*main-window*))

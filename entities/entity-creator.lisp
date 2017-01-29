@@ -66,7 +66,7 @@
                         :radius *default-ship-size*
                         :layer :ship)
     
-    (p2de:add-component e 'game-area-border-policy :policy :wraps-around)
+    (p2de:add-component e 'game-area-border-policy :policy :dies)
     
     (p2de:add-component e 'ship)
     

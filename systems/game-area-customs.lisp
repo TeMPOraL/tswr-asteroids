@@ -16,7 +16,7 @@
         (:wraps-around (setf (p2dm:vec-x position) (wrap-in-range (p2dm:vec-x position) (1- *game-area-min-x*) (1+ *game-area-max-x*))
                              (p2dm:vec-y position) (wrap-in-range (p2dm:vec-y position) (1- *game-area-min-y*) (1+ *game-area-max-y*))))
         (:dies (when (outside-game-area-p position)
-                 (p2de:schedule-entity-for-deletion entity)))))))
+                 (entity-killed-on-border-hit entity)))))))
 
 (defun outside-game-area-p (position)
   (or (< (p2dm:vec-x position) 0)

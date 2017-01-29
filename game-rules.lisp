@@ -10,6 +10,9 @@
 
 (defvar *game-over* t "T if game is not running (e.g. player just died), nil if running.")
 
+(defparameter +default-respawn-shield-duration+ 1.0)
+(defvar *respawn-shield-remaining* 0 "How much respawn shield is remaining.")
+
 (defparameter +starting-asteroid-size+ 48)
 (defparameter +default-powerup-life+ 10)
 (defparameter +asteroid-children+ 4 "How many pieces an asteroids splits into.")
@@ -35,7 +38,8 @@
 
           ((and (shipp entity-1)        ;NOTE rule - ship killed when hit by an asteroid
                 (asteroidp entity-2))
-           (kill-ship entity-1 :killer entity-2))
+           (unless (has-respawn-shield) ;NOTE rule - only if respawn shield is not active
+             (kill-ship entity-1 :killer entity-2)))
 
           ((powerupp entity-1)
            (award-and-kill-powerup entity-1 :collector entity-2)))))
@@ -83,7 +87,15 @@
 
 (defun kill-ship (ship &key killer)
   (log:info "Oops, you're dead. ~A killed by ~A." ship killer)
-  (reset-game-after-death))
+  (decf *lives*)
+  (if (> *lives* 0)
+      (respawn-ship-after-death ship)
+      (game-over)))
+
+(defun entity-killed-on-border-hit (entity)
+  (if (shipp entity)
+      (kill-ship entity)
+      (p2de:schedule-entity-for-deletion entity)))
 
 (defun maybe-spawn-child-asteroids (original-asteroid)
   (flet ((noise-up-angle (angle)
@@ -144,9 +156,24 @@
                       (p2dm:rotated-vector-2d (p2dm:make-vector-2d speed 0.0) theta-vel))))
 
   ;; Spawn player ship in the centre.
-  (spawn-ship (p2dm:make-vector-2d 400.0 300.0)))
+  (spawn-ship (p2dm:make-vector-2d 400.0 300.0))
+  (add-respawn-shield))
 
-(defun reset-game-after-death ()
-  ;; TODO clear all entities
+(defun respawn-ship-after-death (ship)
+  (when-let ((pos (p2de:find-component ship 'position))
+             (kin (p2de:find-component ship 'kinematics))
+             (orn (p2de:find-component ship 'orientation)))
+    (setf (slot-value pos 'position) (p2dm:make-vector-2d 400.0 300.0)
+          (slot-value kin 'velocity) (p2dm:make-vector-2d)
+          (slot-value orn 'orientation) (p2dm:random-float 0 p2dm:+2pi+)))
+  (add-respawn-shield))
+
+(defun game-over ()
   (p2de:schedule-all-entities-for-deletion)
   (setf *game-over* t))
+
+(defun add-respawn-shield ()
+  (setf *respawn-shield-remaining* +default-respawn-shield-duration+))
+
+(defun has-respawn-shield ()
+  (> *respawn-shield-remaining* 0))

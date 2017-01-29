@@ -9,9 +9,10 @@ Some design notes to help finalize the game.
 ** Schedule
 *** <2017-01-27 pią>--<2017-01-29 nie>
 
-**** DOING Try playing with various wrap-around settings
+**** DONE Try playing with various wrap-around settings
+     CLOSED: [2017-01-29 nie 14:07]
      - [X] no wrap-around for bullets
-     - [ ] no wrap-around for ships (dies on hitting border)
+     - [X] no wrap-around for ships (dies on hitting border)
        I'd say that the only thing we need to add is some detection the entity is a ship and needs to run game-rules code as it dies.
 
 **** DONE Improve collision detection efficiency
@@ -45,10 +46,11 @@ Some design notes to help finalize the game.
 
 *** <2017-01-30 pon>--<2017-02-05 nie>
 
-**** TODO Add lives
-     - need a display of number of lives left - maybe reuse the ship sprite, but draw just an outline
-     - need a "respawn" function that doesn't clear the map
-     - will probably need to introduce a temporary "respawn shield" that makes the ship invulnerable for a second or two
+**** DONE Add lives
+     CLOSED: [2017-01-29 nie 15:10]
+     - [X] need a display of number of lives left - maybe reuse the ship sprite, but draw just an outline
+     - [X] need a "respawn" function that doesn't clear the map
+     - [X] will probably need to introduce a temporary "respawn shield" that makes the ship invulnerable for a second or two
 
 **** TODO 1-up powerup
 
