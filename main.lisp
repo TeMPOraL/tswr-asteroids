@@ -104,7 +104,8 @@
   ;; Nothing to do for now.
   (p2dprof:count-value (hash-table-count (p2de::entities p2de:*ecs-manager*))
                        'ecs-entities
-                       :description "no. of entities that exist on current frame"))
+                       :description "no. of entities that exist on current frame"
+                       :history-size 120))
 
 (defmethod p2d:on-render ((game asteroids-game) dt)
   (declare (ignore game))
