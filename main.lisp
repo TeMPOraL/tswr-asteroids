@@ -110,10 +110,8 @@
 (defmethod p2d:on-render ((game asteroids-game) dt)
   (declare (ignore game))
   ;; draw stuff
-  (gl:load-identity)
-  (gl:clear :color-buffer)
 
-  (p2de:tick-frame-systems dt)
+  (p2de:tick-frame-systems dt)          ;FIXME why it's here and not in on-idle??
 
   ;; Draw UI
   ;; FIXME move somewhere else
@@ -137,10 +135,7 @@
                       580
                       0)
         (gl:scale 6 9 6)
-        (p2dglu:draw-triangle-outline))))
-  
-  (gl:flush)
-  (sdl2:gl-swap-window p2d:*main-window*))
+        (p2dglu:draw-triangle-outline)))))
 
 (defun run ()
   (p2d:run (make-instance 'asteroids-game)))
