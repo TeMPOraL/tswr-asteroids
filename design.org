@@ -70,7 +70,10 @@ Some design notes to help finalize the game.
 **** TODO All asteroids killed = spawn new (more)
      Add a ramping-up difficulty
 
-**** TODO Implement laser (maybe reconsider if not out of scope?)
+**** CANCELLED Implement laser (maybe reconsider if not out of scope?)
+     CLOSED: [2017-02-23 czw 02:47]
+     - State "CANCELLED"  from "TODO"       [2017-02-23 czw 02:47] \\
+       Declared out of scope for now.
 
 **** TODO Find some sounds and add them
      - [ ] bullet shot
@@ -80,6 +83,14 @@ Some design notes to help finalize the game.
      - [ ] ship destroyed
 
 **** TODO Think of aesthetics you could use for the game
+
+**** TODO Add intro banner
+
+**** TODO Add main game screen
+
+**** TODO Add pause screen
+
+**** TODO Add blinking before decay for powerups
 
 ** Task staging ground
    I.e. unscheduled yet.
