@@ -139,8 +139,8 @@
         (p2dglu:draw-triangle-outline)))))
 
 (defun run ()
-  (p2d:run (make-instance 'asteroids-game)))
+  (p2d:run :game (make-instance 'asteroids-game)))
 
 (defun run-with-profiling ()
-  #+sbcl(p2d:run-with-profiling (make-instance 'asteroids-game))
-  #-sbcl (error "Profiling currently not supported on this Lisp implementation."))
+  (p2d:run :game (make-instance 'asteroids-game)
+           :profiling t))
