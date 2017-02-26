@@ -6,9 +6,6 @@
 (defparameter *default-mono-font* nil)
 (defparameter *smaller-mono-font* nil)
 
-(defparameter *debug-max-collision-checks-per-tick* 0)
-(defparameter *debug-max-entities* 0)
-
 (defmethod p2d:preinit ((game asteroids-game))
   ;; TODO preconfiguration (if any)
   (setf p2d:*window-title* "TSWR - Asteroids") ; FIXME maybe pass it through the game class?
@@ -93,11 +90,7 @@
   (p2de:tick-simulation-systems dt)
 
   (when (> *respawn-shield-remaining* 0)
-    (decf *respawn-shield-remaining* dt))
-
-  (setf *debug-max-collision-checks-per-tick* (max *debug-max-collision-checks-per-tick* *debug-collision-checks-per-tick*)
-        *debug-max-entities* (max *debug-max-entities* (hash-table-count (p2de::entities p2de::*ecs-manager*))))
-  (setf *debug-collision-checks-per-tick* 0))
+    (decf *respawn-shield-remaining* dt)))
 
 (defmethod p2d:on-idle ((game asteroids-game) dt)
   (declare (ignore game dt))

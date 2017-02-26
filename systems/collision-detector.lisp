@@ -1,7 +1,5 @@
 (in-package #:tswr-asteroids)
 
-(defparameter *debug-collision-checks-per-tick* 0)
-
 (p2de:defsystem collision-detector
   (position collision-sphere))
 
@@ -73,7 +71,6 @@
          (threshold (p2dm:square (float (+ (slot-value s1 'radius)
                                            (slot-value s2 'radius))))))
 
-    (incf *debug-collision-checks-per-tick*)
     (and (< distance-squared threshold)
          (layers-can-collide-p (slot-value s1 'layer)
                                (slot-value s2 'layer)))))
