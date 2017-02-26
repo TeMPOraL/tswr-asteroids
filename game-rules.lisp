@@ -132,6 +132,29 @@
   (whichever :bidi-fire :triple-fire :big-bullets :longer-bullet-life :lower-cooldown :faster-bullets :1up))
 
 
+;;; Some generic stuff
+(defun tick-generic-game-rules (dt)
+  (when *game-over*
+    (start-game)
+    (return-from tick-generic-game-rules))
+
+  (when (= (count-live-asteroids) 0)
+    (next-level)
+    (return-from tick-generic-game-rules))
+
+  (when (> *respawn-shield-remaining* 0)
+    (decf *respawn-shield-remaining* dt)))
+
+(defun count-live-asteroids ()
+  (let ((total 0))
+    (maphash (lambda (id entity)
+               (declare (ignore id))
+               (when (asteroidp entity)
+                 (incf total)))
+             (p2de::entities p2de:*ecs-manager*))
+    total))
+
+
 ;;; Functions to check whether entity is of given game-rules type.
 
 (defun bulletp (entity)
@@ -150,7 +173,8 @@
 ;;; Setting up game levels
 (defun start-game ()
   (set-up-entities-for-level)
-  (clear-game-state)
+  (unless (eql *game-over* :continue)
+    (clear-game-state))
   (setf *game-over* nil))
 
 (defun set-up-entities-for-level ()
@@ -178,8 +202,15 @@
   (add-respawn-shield))
 
 (defun game-over ()
+  (log:info "Game over, restarting...")
   (p2de:schedule-all-entities-for-deletion)
-  (setf *game-over* t))
+  (setf *game-over* :restart))
+
+(defun next-level ()
+  (log:info "Progressing to next level!")
+  ;; FIXME ensure ship (or at least its buffs) is saved!
+  (p2de:schedule-all-entities-for-deletion)
+  (setf *game-over* :continue))
 
 (defun add-respawn-shield ()
   (setf *respawn-shield-remaining* +default-respawn-shield-duration+))

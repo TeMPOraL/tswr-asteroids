@@ -85,12 +85,8 @@
                   (sdl2:push-event :quit)))))
 
 (defmethod p2d:on-tick ((game asteroids-game) dt)
-  (when *game-over*
-    (start-game))
-  (p2de:tick-simulation-systems dt)
-
-  (when (> *respawn-shield-remaining* 0)
-    (decf *respawn-shield-remaining* dt)))
+  (tick-generic-game-rules dt)
+  (p2de:tick-simulation-systems dt))
 
 (defmethod p2d:on-idle ((game asteroids-game) dt)
   (declare (ignore game dt))
