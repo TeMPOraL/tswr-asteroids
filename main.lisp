@@ -141,6 +141,6 @@
 (defun run ()
   (p2d:run :game (make-instance 'asteroids-game)))
 
-(defun run-with-profiling ()
+(defun run-with-profiling (&optional (mode :cpu))
   (p2d:run :game (make-instance 'asteroids-game)
-           :profiling t))
+           :profiling-mode mode))
