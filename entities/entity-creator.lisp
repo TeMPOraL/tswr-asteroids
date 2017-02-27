@@ -1,16 +1,19 @@
 (in-package #:tswr-asteroids)
 
 (defparameter *base-asteroid-score* 1000) ;TODO move to game-rules, or sth.
-(defparameter *asteroid-powerup-drop-chance* 0.05) ;TODO move to game-rules, or sth.
+(defparameter *asteroid-powerup-drop-chance* 0.01) ;TODO move to game-rules, or sth.
 (defparameter *default-ship-size* 8)   ;TODO move to game-rules, or sth.
 (defparameter *default-powerup-size* 20)   ;TODO move to game-rules, or sth.
 (defparameter *default-powerup-score* 2000)   ;TODO move to game-rules, or sth.
 (defparameter *default-explosion-life* 1.0)
 (defparameter *default-explosion-size* 10.0)
 
-(defparameter *triple-fire-angle-offset* (p2dm:deg->rad 30.0))
-(defparameter *bullet-life-multiplier-buff* 2.0)
-(defparameter *bullet-size-multiplier-buff* 3.0)
+(defparameter *default-bullet-life* 0.75)
+(defparameter *default-bullet-speed* 1.0)
+
+(defparameter *triple-fire-angle-offset* (p2dm:deg->rad 15.0))
+(defparameter *bullet-life-multiplier-buff* 1.5)
+(defparameter *bullet-size-multiplier-buff* 2.5)
 
 
 ;;; Asteroids
@@ -167,7 +170,7 @@
                              )
     
          (p2de:add-component e 'decays
-                             :life-remaining (* life-multiplier 1.5)) ;FIXME (life) magic, bullet-type dependent
+                             :life-remaining (* life-multiplier *default-bullet-life*))
     
          (p2de:add-component e 'renderable
                              :sprite :bullet
