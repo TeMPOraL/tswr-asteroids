@@ -11,16 +11,7 @@
 
 (defvar *game-over* t "T if game is not running (e.g. player just died), nil if running.")
 
-(defparameter +default-respawn-shield-duration+ 1.0)
 (defvar *respawn-shield-remaining* 0 "How much respawn shield is remaining.")
-
-(defparameter +initial-asteroids+ 3)
-(defparameter +asteroids-increment-per-level+ 2)
-(defparameter +starting-asteroid-size+ 48)
-(defparameter +default-powerup-life+ 7)
-(defparameter +asteroid-children+ 4 "How many pieces an asteroids splits into.")
-(defparameter +minimum-asteroid-size+ 10 "We don't spawn asteroids smaller than this.")
-(defparameter +default-asteroid-spread-speed+ 16 "Speed at which asteroids spread out.")
 
 (defvar *last-ship-buffs* '() "Store for ship buffs between level progress.")
 

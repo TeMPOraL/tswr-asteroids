@@ -1,20 +1,5 @@
 (in-package #:tswr-asteroids)
 
-(defparameter *base-asteroid-score* 1000) ;TODO move to game-rules, or sth.
-(defparameter *asteroid-powerup-drop-chance* 0.01) ;TODO move to game-rules, or sth.
-(defparameter *default-ship-size* 8)   ;TODO move to game-rules, or sth.
-(defparameter *default-powerup-size* 20)   ;TODO move to game-rules, or sth.
-(defparameter *default-powerup-score* 2000)   ;TODO move to game-rules, or sth.
-(defparameter *default-explosion-life* 1.0)
-(defparameter *default-explosion-size* 10.0)
-
-(defparameter *default-bullet-life* 0.75)
-(defparameter *default-bullet-speed* 1.0)
-
-(defparameter *triple-fire-angle-offset* (p2dm:deg->rad 15.0))
-(defparameter *bullet-life-multiplier-buff* 1.5)
-(defparameter *bullet-size-multiplier-buff* 2.5)
-
 
 ;;; Asteroids
 
@@ -40,10 +25,10 @@
     (p2de:add-component e 'game-area-border-policy :policy :wraps-around)
     
     (p2de:add-component e 'gives-score
-                        :score (/ *base-asteroid-score* size))
+                        :score (/ +base-asteroid-score+ size))
     
     (p2de:add-component e 'drops-powerup
-                        :chance *asteroid-powerup-drop-chance*)
+                        :chance +asteroid-powerup-drop-chance+)
     (p2de:add-component e 'renderable
                         :sprite (make-asteroid-sprite)
                         :color (p2dg:make-color-4 1.0 1.0 1.0 1.0)
@@ -62,11 +47,11 @@
                         :orientation (p2dm:random-float 0 p2dm:+2pi+))
     
     (p2de:add-component e 'kinematics
-                        :speed-limit 150.0
+                        :speed-limit +default-ship-speed-limit+
                         :rotation-speed-limit p2dm:+2pi+)
     
     (p2de:add-component e 'collision-sphere
-                        :radius *default-ship-size*
+                        :radius +default-ship-size+
                         :layer :ship)
     
     (p2de:add-component e 'game-area-border-policy :policy :dies)
@@ -77,14 +62,14 @@
                         :bullet-type :standard ;:special
                         :buffs starting-buffs ;(:bidi-fire :triple-fire :big-bullets :longer-bullet-life :lower-cooldown :faster-bullets)
                         :cooldown-left 0.0
-                        :cooldown-default 0.25) ;FIXME magic
+                        :cooldown-default +default-gun-cooldown+)
     
     (p2de:add-component e 'player-controlled)
     
     (p2de:add-component e 'renderable
                         :sprite :ship-accelerating
                         :color (p2dg:make-color-4 1.0 1.0 0.0 1.0)
-                        :scale *default-ship-size*)
+                        :scale +default-ship-size+)
     e))
 
 
@@ -106,8 +91,8 @@
       (setf bullets-to-fire-velocities
             (mapcan (lambda (vel)
                       (list vel
-                            (p2dm:rotated-vector-2d vel *triple-fire-angle-offset*)
-                            (p2dm:rotated-vector-2d vel (- *triple-fire-angle-offset*))))
+                            (p2dm:rotated-vector-2d vel +triple-fire-angle-offset+)
+                            (p2dm:rotated-vector-2d vel (- +triple-fire-angle-offset+))))
                     bullets-to-fire-velocities)))
     
     (when (member :bidi-fire buffs)
@@ -135,10 +120,10 @@
                         :buffs buffs)
 
     (let ((life-multiplier (if (member :longer-bullet-life buffs)
-                               *bullet-life-multiplier-buff*
+                               +bullet-life-multiplier-buff+
                                1.0))
           (size-multiplier (if (member :big-bullets buffs)
-                               *bullet-size-multiplier-buff*
+                               +bullet-size-multiplier-buff+
                                1.0))
           )
       (case type
@@ -165,17 +150,17 @@
          )
         (otherwise
          (p2de:add-component e 'collision-sphere
-                             :radius (* size-multiplier 2.0) ;FIXME (size) magic, bullet-type dependent
+                             :radius (* size-multiplier +default-bullet-size+)
                              :layer :bullet
                              )
     
          (p2de:add-component e 'decays
-                             :life-remaining (* life-multiplier *default-bullet-life*))
+                             :life-remaining (* life-multiplier +default-bullet-life+))
     
          (p2de:add-component e 'renderable
                              :sprite :bullet
                              :color (p2dg:make-color-4 1.0 0.0 0.0 1.0) ;TODO different types = different colors
-                             :scale (* size-multiplier 2.0) ;FIXME (size) magic, bullet-type dependent
+                             :scale (* size-multiplier +default-bullet-size+)
                              )
          )))
     e))
@@ -191,7 +176,7 @@
     (p2de:add-component e 'kinematics)  ;TODO random velocity
     
     (p2de:add-component e 'collision-sphere
-                        :radius *default-powerup-size*
+                        :radius +default-powerup-size+
                         :layer :powerup)
     
     ;; (p2de:add-component e 'game-area-border-policy :policy :wraps-around) <-- don't need that as powerups are stationary anyway
@@ -203,12 +188,12 @@
                         :life-remaining life)
     
     (p2de:add-component e 'gives-score
-                        :score *default-powerup-score*)
+                        :score +default-powerup-score+)
     
     (p2de:add-component e 'renderable
                         :sprite :powerup ;TODO different types of powerups
                         :color (p2dg:make-color-4 1.0 1.0 0.0 1.0)
-                        :scale *default-powerup-size*)
+                        :scale +default-powerup-size+)
     e))
 
 
@@ -220,14 +205,14 @@
                         :position position)
     
     (p2de:add-component e 'decays
-                        :life-remaining *default-explosion-life*)
+                        :life-remaining +default-explosion-life+)
 
     ;; TODO explosion is animated, we need to handle it somehow.
     
     (p2de:add-component e 'renderable
                         :sprite :explosion
                         :color (p2dg:make-color-4 1.0 0.0 0.0 1.0)
-                        :scale *default-explosion-size*)
+                        :scale +default-explosion-size+)
     e))
 
 

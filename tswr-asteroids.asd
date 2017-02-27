@@ -22,6 +22,8 @@
 
   :components ((:file "package")
                (:file "version")
+               
+               (:file "game-constants")
 
                (:module "components"
                         :components ((:file "asteroid")

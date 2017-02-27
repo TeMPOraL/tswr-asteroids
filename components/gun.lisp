@@ -4,5 +4,5 @@
   ((bullet-type nil)
    (cooldown-default 1.0)
    (cooldown-left 0.0)
-   (default-bullet-velocity 300.0)             ;FIXME magic
+   (default-bullet-velocity +default-bullet-velocity+)
    (buffs '())))
