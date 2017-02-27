@@ -7,14 +7,17 @@
 (defvar *lives* +default-lives+)
 (defvar *score* 0)
 (defvar *high-score* 0)
+(defvar *current-level* 0)
 
 (defvar *game-over* t "T if game is not running (e.g. player just died), nil if running.")
 
 (defparameter +default-respawn-shield-duration+ 1.0)
 (defvar *respawn-shield-remaining* 0 "How much respawn shield is remaining.")
 
+(defparameter +initial-asteroids+ 3)
+(defparameter +asteroids-increment-per-level+ 2)
 (defparameter +starting-asteroid-size+ 48)
-(defparameter +default-powerup-life+ 10)
+(defparameter +default-powerup-life+ 7)
 (defparameter +asteroid-children+ 4 "How many pieces an asteroids splits into.")
 (defparameter +minimum-asteroid-size+ 10 "We don't spawn asteroids smaller than this.")
 (defparameter +default-asteroid-spread-speed+ 16 "Speed at which asteroids spread out.")
@@ -24,7 +27,8 @@
 (defun clear-game-state ()
   "Clear all state related to main game and its rules."
   (setf *lives* +default-lives+
-        *score* 0)
+        *score* 0
+        *current-level* 0)
   ;; TODO read *high-score* from some data file or sth.
   (setf *last-ship-buffs* nil))
 
@@ -190,7 +194,7 @@
 
 (defun set-up-entities-for-level ()
   ;; Spawn some random asteroids in the vicinity of player.
-  (dotimes (i 10)
+  (dotimes (i (+ +initial-asteroids+ (* *current-level* +asteroids-increment-per-level+)))
     (let ((r (p2dm:random-float 100.0 200.0))
           (theta-pos (p2dm:random-float 0.0 p2dm:+2pi+))
           (speed (p2dm:random-float 1.0 70.0))
@@ -222,6 +226,7 @@
   ;; FIXME ensure ship (or at least its buffs) is saved!
   (p2de:schedule-all-entities-for-deletion)
   (setf *last-ship-buffs* (get-current-ship-buffs))
+  (incf *current-level*)
   (setf *game-over* :continue))
 
 (defun get-current-ship-buffs ()
