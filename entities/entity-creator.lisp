@@ -50,7 +50,7 @@
 
 ;;; Ships
 
-(defun spawn-ship (position)
+(defun spawn-ship (position &optional starting-buffs)
   (let ((e (p2de:make-entity)))
     (p2de:add-component e 'position
                         :position position)
@@ -72,7 +72,7 @@
     
     (p2de:add-component e 'gun
                         :bullet-type :standard ;:special
-                        :buffs '() ;(:bidi-fire :triple-fire :big-bullets :longer-bullet-life :lower-cooldown :faster-bullets)
+                        :buffs starting-buffs ;(:bidi-fire :triple-fire :big-bullets :longer-bullet-life :lower-cooldown :faster-bullets)
                         :cooldown-left 0.0
                         :cooldown-default 0.25) ;FIXME magic
     

@@ -19,12 +19,14 @@
 (defparameter +minimum-asteroid-size+ 10 "We don't spawn asteroids smaller than this.")
 (defparameter +default-asteroid-spread-speed+ 16 "Speed at which asteroids spread out.")
 
+(defvar *last-ship-buffs* '() "Store for ship buffs between level progress.")
+
 (defun clear-game-state ()
   "Clear all state related to main game and its rules."
   (setf *lives* +default-lives+
         *score* 0)
   ;; TODO read *high-score* from some data file or sth.
-  )
+  (setf *last-ship-buffs* nil))
 
 (defun handle-collision (entity-1-id entity-2-id)
   (let ((entity-1 (p2de:entity-by-id entity-1-id))
@@ -154,6 +156,15 @@
              (p2de::entities p2de:*ecs-manager*))
     total))
 
+(defun get-player-ship ()
+  (let (ship)
+    (maphash (lambda (id entity)
+               (declare (ignore id))
+               (when (shipp entity)
+                 (setf ship entity)))
+             (p2de::entities p2de:*ecs-manager*))
+    ship))
+
 
 ;;; Functions to check whether entity is of given game-rules type.
 
@@ -172,9 +183,9 @@
 
 ;;; Setting up game levels
 (defun start-game ()
-  (set-up-entities-for-level)
   (unless (eql *game-over* :continue)
     (clear-game-state))
+  (set-up-entities-for-level)
   (setf *game-over* nil))
 
 (defun set-up-entities-for-level ()
@@ -189,7 +200,7 @@
                       (p2dm:rotated-vector-2d (p2dm:make-vector-2d speed 0.0) theta-vel))))
 
   ;; Spawn player ship in the centre.
-  (spawn-ship (p2dm:make-vector-2d 400.0 300.0))
+  (spawn-ship (p2dm:make-vector-2d 400.0 300.0) *last-ship-buffs*)
   (add-respawn-shield))
 
 (defun respawn-ship-after-death (ship)
@@ -210,7 +221,12 @@
   (log:info "Progressing to next level!")
   ;; FIXME ensure ship (or at least its buffs) is saved!
   (p2de:schedule-all-entities-for-deletion)
+  (setf *last-ship-buffs* (get-current-ship-buffs))
   (setf *game-over* :continue))
+
+(defun get-current-ship-buffs ()
+  (when-let ((ship (get-player-ship)))
+    (slot-value (p2de:find-component ship 'gun) 'buffs)))
 
 (defun add-respawn-shield ()
   (setf *respawn-shield-remaining* +default-respawn-shield-duration+))
