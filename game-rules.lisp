@@ -229,3 +229,77 @@
 
 (defun has-respawn-shield ()
   (> *respawn-shield-remaining* 0))
+
+
+
+;;; Related to input handling.
+
+(defun key-accelerate (entity)
+  "Accelerate ship."
+  (when-let ((kinematics (p2de:find-component entity 'kinematics))
+             (orientation (p2de:find-component entity 'orientation)))
+    (accelerate kinematics orientation 1.0)))
+
+(defun key-decelerate (entity)
+  "Decelerate ship."
+  (when-let ((kinematics (p2de:find-component entity 'kinematics))
+             (orientation (p2de:find-component entity 'orientation)))
+    (accelerate kinematics orientation -0.5)))
+
+(defun no-key-stop (entity)
+  (when-let ((kinematics (p2de:find-component entity 'kinematics))
+             (orientation (p2de:find-component entity 'orientation)))
+    (stop-accelerating kinematics)))
+
+(defun key-turn (entity direction)
+  "Turn in `DIRECTION' (:left, :right or :stop). FIXME"
+  (when-let ((kinematics (p2de:find-component entity 'kinematics)))
+    (turn kinematics direction)))
+
+(defun key-shoot (entity)
+  "Shoot gun."
+  (when-let ((gun (p2de:find-component entity 'gun))
+             (position (p2de:find-component entity 'position))
+             (orientation (p2de:find-component entity 'orientation))
+             (kinematics (p2de:find-component entity 'kinematics)))
+    (shoot gun position orientation kinematics)))
+
+(defun orientation-value->direction (orientation)
+  (p2dm:rotated-vector-2d (p2dm:make-vector-2d 0.0 1.0) orientation))
+
+(defun accelerate (kinematics orientation scale)
+  (let ((direction (orientation-value->direction (slot-value orientation 'orientation))))
+    (setf (slot-value kinematics 'acceleration)
+          (p2dm:scaled-vector direction (* 150.0 scale)))))
+
+(defun stop-accelerating (kinematics)
+  (setf (slot-value kinematics 'acceleration)
+        (p2dm:make-vector-2d)))
+
+(defun turn (kinematics angle-sign)
+  (setf (slot-value kinematics 'angular-velocity)
+        (p2dm:deg->rad (* 180.0 angle-sign))))
+
+(defun shoot (gun position orientation kinematics)
+  (let ((direction (orientation-value->direction (slot-value orientation 'orientation)))
+        (pos (slot-value position 'position))
+        (shooter-vel (slot-value kinematics 'velocity)))
+    (with-slots (cooldown-left
+                 cooldown-default
+                 bullet-type
+                 default-bullet-velocity
+                 buffs)
+        gun
+      (unless (> cooldown-left 0.0)
+        (let ((cooldown-multiplier (if (member :lower-cooldown buffs)
+                                       *cooldown-multiplier-buff*
+                                       1.0))
+              (speed-multiplier (if (member :faster-bullets buffs)
+                                    *bullet-speed-multiplier-buff*
+                                    1.0)))
+          (setf cooldown-left (* cooldown-multiplier cooldown-default))
+          (shoot-gun :position pos
+                     :bullet-velocity (p2dm:scaled-vector direction (* speed-multiplier default-bullet-velocity))
+                     :shooter-velocity shooter-vel
+                     :bullet-type bullet-type
+                     :buffs buffs))))))

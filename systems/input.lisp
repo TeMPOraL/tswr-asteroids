@@ -9,71 +9,22 @@
 (defmethod p2de:do-system ((system input) entity dt)
   (declare (ignore system dt))
   ;; MOVEMENT
-  (when-let ((kinematics (p2de:find-component entity 'kinematics))
-             (orientation (p2de:find-component entity 'orientation)))
-    (if (key-pressed-p :scancode-up)
-        (accelerate kinematics orientation 1.0)
-        (if (key-pressed-p :scancode-down)
-            (accelerate kinematics orientation -0.5)
-            (stop-accelerating kinematics)))
-    
-    (if (key-pressed-p :scancode-left)
-        (turn kinematics 1)
-        (if (key-pressed-p :scancode-right)
-            (turn kinematics -1)
-            (turn kinematics 0))))
+  (if (key-pressed-p :scancode-up)
+      (key-accelerate entity)
+      (if (key-pressed-p :scancode-down)
+          (key-decelerate entity)
+          (no-key-stop entity)))
+
+  (if (key-pressed-p :scancode-left)
+      (key-turn entity 1)
+      (if (key-pressed-p :scancode-right)
+          (key-turn entity -1)
+          (key-turn entity 0)))
   
   ;; SHOOTING
-  (when-let ((gun (p2de:find-component entity 'gun))
-             (position (p2de:find-component entity 'position))
-             (orientation (p2de:find-component entity 'orientation))
-             (kinematics (p2de:find-component entity 'kinematics)))
-    (when (key-pressed-p :scancode-space)
-      (shoot gun position orientation kinematics))))
-
+  (when (key-pressed-p :scancode-space)
+    (key-shoot entity)))
 
 (defun key-pressed-p (scancode)
   (sdl2:keyboard-state-p scancode))
 
-;;; the most dumb way to make it work...
-
-(defun orientation-value->direction (orientation)
-  (p2dm:rotated-vector-2d (p2dm:make-vector-2d 0.0 1.0) orientation))
-
-(defun accelerate (kinematics orientation scale)
-  (let ((direction (orientation-value->direction (slot-value orientation 'orientation))))
-    (setf (slot-value kinematics 'acceleration)
-          (p2dm:scaled-vector direction (* 150.0 scale)))))
-
-(defun stop-accelerating (kinematics)
-  (setf (slot-value kinematics 'acceleration)
-        (p2dm:make-vector-2d)))
-
-(defun turn (kinematics angle-sign)
-  (setf (slot-value kinematics 'angular-velocity)
-        (p2dm:deg->rad (* 180.0 angle-sign))))
-
-;;; FIXME code of #'shoot should totally be in game rules, not input handler
-(defun shoot (gun position orientation kinematics)
-  (let ((direction (orientation-value->direction (slot-value orientation 'orientation)))
-        (pos (slot-value position 'position))
-        (shooter-vel (slot-value kinematics 'velocity)))
-    (with-slots (cooldown-left
-                 cooldown-default
-                 bullet-type
-                 default-bullet-velocity
-                 buffs)
-        gun
-      (unless (> cooldown-left 0.0)
-        (let ((cooldown-multiplier (if (member :lower-cooldown buffs)
-                                       *cooldown-multiplier-buff*
-                                       1.0))
-              (speed-multiplier (if (member :faster-bullets buffs)
-                                    *bullet-speed-multiplier-buff*
-                                    1.0)))
-          (setf cooldown-left (* cooldown-multiplier cooldown-default))
-          (shoot-gun :position pos
-                     :bullet-velocity (p2dm:scaled-vector direction (* speed-multiplier default-bullet-velocity))
-                     :shooter-velocity shooter-vel
-                     :bullet-type bullet-type
-                     :buffs buffs))))))
