@@ -111,7 +111,6 @@
           bullets-to-fire-velocities)))
 
 (defun shoot-bullet (&key position velocity type buffs)
-  ;; TODO consider gun buffs like multiple bullets, bigger bullets, faster shooting, etc.
   (let ((e (spawn-basic-bullet :position position
                                :velocity velocity)))
 
@@ -133,7 +132,7 @@
         ;; - :missile :explosive
         ;; - :missile :fragmentary
         ;; - :hanzo
-        (:special
+        (:special                       ;TODO remove and replace with real bullet types
          (p2de:add-component e 'collision-sphere
                              :radius (* size-multiplier 4.0) ;FIXME (size) magic, bullet-type dependent
                              :layer :bullet
@@ -173,13 +172,11 @@
     (p2de:add-component e 'position
                         :position position)
     
-    (p2de:add-component e 'kinematics)  ;TODO random velocity
+    (p2de:add-component e 'kinematics)
     
     (p2de:add-component e 'collision-sphere
                         :radius +default-powerup-size+
                         :layer :powerup)
-    
-    ;; (p2de:add-component e 'game-area-border-policy :policy :wraps-around) <-- don't need that as powerups are stationary anyway
     
     (p2de:add-component e 'powerup
                         :powerup-type type)
@@ -191,10 +188,15 @@
                         :score +default-powerup-score+)
     
     (p2de:add-component e 'renderable
-                        :sprite :powerup ;TODO different types of powerups
-                        :color (p2dg:make-color-4 1.0 1.0 0.0 1.0)
+                        :sprite :powerup
+                        :color (powerup-type->powerup-color type)
                         :scale +default-powerup-size+)
     e))
+
+(defun powerup-type->powerup-color (powerup-type)
+  "Get appropriate color for `POWERUP-TYPE'."
+  (declare (ignore powerup-type))       ;TODO actually use it
+  (p2dg:make-color-4 1.0 1.0 0.0 1.0))
 
 
 ;;; FX
