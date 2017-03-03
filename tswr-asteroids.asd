@@ -26,7 +26,8 @@
                (:file "game-constants")
 
                (:module "components"
-                        :components ((:file "asteroid")
+                        :components ((:file "animation")
+                                     (:file "asteroid")
                                      (:file "buff")
                                      (:file "bullet")
                                      (:file "collision-pair")
@@ -56,6 +57,7 @@
                                      (:file "gun-cooldown-updater")
                                      (:file "decayer")
                                      (:file "ship-effects")
+                                     (:file "animation-updater")
                                      (:file "renderer")))
                (:file "game-rules")
                (:file "main")))

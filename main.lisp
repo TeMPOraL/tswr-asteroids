@@ -39,6 +39,7 @@
                         (gun-cooldown-updater :priority 20 :type :simulation)
                         (decayer :priority 30 :type :simulation)
                         (ship-effects :priority 40 :type :simulation)
+                        (animation-updater :priority 45 :type :simulation)
                         (renderer :priority 50 :type :frame)))
 
   ;; Load additional resources needed
