@@ -43,8 +43,8 @@
                         (renderer :priority 50 :type :frame)))
 
   ;; Load additional resources needed
-  (setf *default-mono-font* (p2dg:get-rendered-font "assets/fonts/VeraMoBd.ttf" :size 16))
-  (setf *smaller-mono-font* (p2dg:get-rendered-font "assets/fonts/VeraMono.ttf" :size 12))
+  (setf *default-mono-font* (p2dg:get-rendered-font "fonts/Vera/VeraMoBd.ttf" :size 16))
+  (setf *smaller-mono-font* (p2dg:get-rendered-font "fonts/Vera/VeraMono.ttf" :size 12))
 
   (setf *game-over* t))
 
