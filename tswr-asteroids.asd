@@ -60,4 +60,5 @@
                                      (:file "animation-updater")
                                      (:file "renderer")))
                (:file "game-rules")
+               (:file "screens")
                (:file "main")))
