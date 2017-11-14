@@ -210,7 +210,14 @@
 (defun game-over ()
   (log:info "Game over, restarting...")
   (p2de:schedule-all-entities-for-deletion)
-  (setf *game-over* :restart))
+  (setf *game-over* :restart)
+  (switch-game-screen :defeat))
+
+(defun abort-game ()
+  (log:info "User chickenig out...")
+  (p2de:schedule-all-entities-for-deletion)
+  (setf *game-over* :restart)
+  (switch-game-screen :menu))
 
 (defun next-level ()
   (log:info "Progressing to next level!")
@@ -218,7 +225,8 @@
   (p2de:schedule-all-entities-for-deletion)
   (setf *last-ship-buffs* (get-current-ship-buffs))
   (incf *current-level*)
-  (setf *game-over* :continue))
+  (setf *game-over* :continue)
+  (switch-game-screen :get-ready))
 
 (defun get-current-ship-buffs ()
   (when-let ((ship (get-player-ship)))

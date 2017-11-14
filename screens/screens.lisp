@@ -56,7 +56,7 @@ the last screen for the whole game."))
           ;;      splash-screen; it would also allow for intro/credits
           ;;      screen, victory screen, or whatever
           (:get-ready . ,(make-instance 'get-ready-screen))
-          (:defeat-screen . ,(make-instance 'defeat-screen))
+          (:defeat . ,(make-instance 'defeat-screen))
           (:main-game . ,(make-instance 'main-game-screen))))
 
   (mapc (lambda (entry)

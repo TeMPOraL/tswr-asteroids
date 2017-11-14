@@ -66,7 +66,7 @@
                    (debug-spawn-powerup))
 
       (on-key-down :scancode-escape
-                   (sdl2:push-event :quit)))))
+                   (abort-game)))))
 
 (defmethod on-tick ((screen main-game-screen) dt)
   (tick-generic-game-rules dt)
