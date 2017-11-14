@@ -5,14 +5,15 @@
 
 
 (defclass main-game-screen (game-screen)
-  ())
+  ((paused-p :initform nil
+             :accessor main-game-paused-p)))
 
 
 
 (defmethod on-phase-in :before ((screen main-game-screen) previous-screen)
   (declare (ignore previous-screen))
-  ;; TODO generic game initialization
-  )
+  ;; generic game initialization
+  (setf (main-game-paused-p screen) nil))
 
 (defmethod on-phase-in ((screen main-game-screen) (previous-screen get-ready-screen))
   ;; TODO additional initialization - clear score, et al.
@@ -48,15 +49,23 @@
                    (debug-spawn-powerup))
 
       (on-key-down :scancode-escape
-                   (abort-game)))))
+                   (setf (main-game-paused-p screen)
+                         (not (main-game-paused-p screen))))
+      (on-key-down :scancode-q
+                   (when (main-game-paused-p screen)
+                     (abort-game))))))
 
 (defmethod on-tick ((screen main-game-screen) dt)
-  (tick-generic-game-rules dt)
-  (p2de:tick-simulation-systems dt))
+  (unless (main-game-paused-p screen)
+    (tick-generic-game-rules dt)
+    (p2de:tick-simulation-systems dt)))
 
 (defmethod on-render ((screen main-game-screen) dt)
   ;; draw stuff
 
+  ;; XXX that we don't hav to condition this out on pause
+  ;; XXX is only because of accident - the only :frame system
+  ;; XXX we use is the rendering system.
   (p2de:tick-frame-systems dt) ;FIXME why it's here and not in on-idle??
 
   ;; Draw UI
@@ -82,4 +91,22 @@
                       580
                       0)
         (gl:scale 6 9 6)
-        (p2dglu:draw-triangle-outline)))))
+        (p2dglu:draw-triangle-outline))))
+
+  (when (main-game-paused-p screen)
+    (p2dg:with-color (1 1 1)
+      (draw-text "PAUSED"
+                 :size 72
+                 :x 400
+                 :y 300
+                 :alignment-x :center)
+      (draw-text "Press Q to quit to main menu."
+                 :size 16
+                 :x 400
+                 :y 250
+                 :alignment-x :center)
+      (draw-text "Press ESC to unpause."
+                 :size 16
+                 :x 400
+                 :y 230
+                 :alignment-x :center))))
