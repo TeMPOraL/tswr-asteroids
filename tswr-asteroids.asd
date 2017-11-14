@@ -63,6 +63,7 @@
                (:file "ui")
                (:module "screens"
                         :components ((:file "screens")
+                                     (:file "screen-banner")
                                      (:file "screen-menu")
                                      (:file "screen-defeat")
                                      (:file "screen-get-ready")

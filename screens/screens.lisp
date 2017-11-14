@@ -55,8 +55,10 @@ the last screen for the whole game."))
           ;; TODO get-ready and defeat could be refactored into single
           ;;      splash-screen; it would also allow for intro/credits
           ;;      screen, victory screen, or whatever
-          (:get-ready . ,(make-instance 'get-ready-screen))
-          (:defeat . ,(make-instance 'defeat-screen))
+          (:get-ready . ,(make-instance 'get-ready-screen
+                                        :next-screen :main-game))
+          (:defeat . ,(make-instance 'defeat-screen
+                                     :next-screen :menu))
           (:main-game . ,(make-instance 'main-game-screen))))
 
   (mapc (lambda (entry)
