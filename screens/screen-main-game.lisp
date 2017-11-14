@@ -5,27 +5,9 @@
 
 
 (defclass main-game-screen (game-screen)
-  ((primary-ui-font :initform nil
-                    :accessor main-game-primary-ui-font)
-   (secondary-ui-font :initform nil
-                      :accessor main-game-secondary-ui-font)))
+  ())
 
 
-
-(defmethod on-create ((screen main-game-screen))
-  (setf (main-game-primary-ui-font screen)
-        (or (main-game-primary-ui-font screen)
-            (p2dg:get-rendered-font "fonts/Vera/VeraMoBd.ttf" :size 16))
-
-        (main-game-secondary-ui-font screen)
-        (or (main-game-secondary-ui-font screen)
-            (p2dg:get-rendered-font "fonts/Vera/VeraMono.ttf" :size 12))))
-
-(defmethod on-destroy ((screen main-game-screen))
-  ;; We let the end-game deinitialization handle these.
-  ;;(p2dg:free-font (main-game-primary-ui-font screen))
-  ;;(p2dg:free-font (main-game-secondary-ui-font screen))
-  )
 
 (defmethod on-phase-in :before ((screen main-game-screen) previous-screen)
   (declare (ignore previous-screen))
@@ -81,15 +63,16 @@
   ;; FIXME move somewhere else
   ;; Score
   (p2dg:with-color (0 1 0)
-    (p2dg::draw-text (format nil "~10D" (floor *score*))
-                     :font (main-game-primary-ui-font screen)
-                     :x 680
-                     :y 580))
+    (draw-text (format nil "~10D" (floor *score*))
+               :font +bold-font+
+               :x 790
+               :y 580
+               :alignment-x :right))
   (p2dg:with-color (1 1 1)
-    (p2dg::draw-text (format nil "High score: ~10D" (floor *high-score*))
-                     :font (main-game-secondary-ui-font screen)
-                     :x 600
-                     :y 560))
+    (draw-text (format nil "High score: ~10D" (floor *high-score*))
+               :x 790
+               :y 560
+               :alignment-x :right))
 
   ;; Lives
   (p2dg:with-color (1 1 0)

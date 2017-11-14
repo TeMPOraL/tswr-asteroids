@@ -60,6 +60,7 @@
                                      (:file "animation-updater")
                                      (:file "renderer")))
                (:file "game-rules")
+               (:file "ui")
                (:module "screens"
                         :components ((:file "screens")
                                      (:file "screen-menu")

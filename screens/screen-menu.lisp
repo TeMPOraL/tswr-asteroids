@@ -6,34 +6,16 @@
 
 (defclass menu-screen (game-screen)
   ((options :accessor game-menu-options)
-   (current-option :accessor game-menu-current-option)
-
-   (banner-font :initform nil
-                :accessor game-menu-banner-font)
-   (options-font :initform nil
-                 :accessor game-menu-options-font)))
+   (current-option :accessor game-menu-current-option)))
 
 
 (defmethod on-create ((screen menu-screen))
   (setf (game-menu-options screen)
         `(("New Game" . ,(lambda () (switch-game-screen :get-ready)))
-          ("Quit" . ,(lambda () (sdl2:push-event :quit)))))
-  
-  (setf (game-menu-banner-font screen)
-        (or (game-menu-banner-font screen)
-            (p2dg:get-rendered-font "fonts/Vera/VeraMoBd.ttf" :size 24))
-
-        (game-menu-options-font screen)
-        (or (game-menu-options-font screen)
-            (p2dg:get-rendered-font "fonts/Vera/VeraMono.ttf" :size 16))))
+          ("Quit" . ,(lambda () (sdl2:push-event :quit))))))
 
 (defmethod on-destroy ((screen menu-screen))
-  (setf (game-menu-options screen) nil)
-
-  ;; We let the end-game deinitialization handle these.
-  ;; (p2dg:free-font (game-menu-banner-font screen))
-  ;; (p2dg:free-font (game-menu-options-font screen))
-  )
+  (setf (game-menu-options screen) nil))
 
 (defmethod on-phase-in ((screen menu-screen) previous-screen)
   (declare (ignore previous-screen))
@@ -78,22 +60,23 @@
 (defmethod on-render ((screen menu-screen) dt)
   ;; TODO render menu
   (p2dg:with-color (1 1 1)
-    (p2dg::draw-text "TSWR: ASTEROIDS"
-                     :font (game-menu-banner-font screen)
-                     :x 300
-                     :y 400)
+    (draw-text "TSWR: ASTEROIDS"
+               :font +bold-font+
+               :size 72
+               :x 400
+               :y 400
+               :alignment-x :center
+               :alignment-y :center)
 
     (loop for option in (game-menu-options screen)
-            for i = 0 then (1+ i)
-       do
-         (p2dg::draw-text (car option)
-                          :font (game-menu-options-font screen)
-                          :x 280
-                          :y (- 300 (* i 50))))
-
-    (gl:with-pushed-matrix
-      (gl:translate 260 (- 310 (* (game-menu-current-option screen) 50)) 0)
-      (gl:rotate -90 0 0 1)
-      (gl:scale 15 10 0)
-      (p2dglu:draw-triangle-outline))))
+       for i = 0 then (1+ i)
+       do (let ((selectedp (= (game-menu-current-option screen) i)))
+            (draw-text (car option)
+                       :font (if selectedp
+                              +bold-font+
+                              +default-font+)
+                       :size (if selectedp 18 16)
+                       :x 400
+                       :y (- 200 (* i 50))
+                       :alignment-x :center)))))
 
