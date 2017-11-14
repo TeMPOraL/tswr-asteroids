@@ -41,8 +41,8 @@
                         (animation-updater :priority 45 :type :simulation)
                         (renderer :priority 50 :type :frame)))
 
-  (create-registered-screens)
-  (switch-game-screen :main-game)
+  (initialize-game-screens)
+  (switch-game-screen :menu)
 
   (setf *game-over* t))
 
@@ -54,9 +54,12 @@
 (defmethod p2d:deinitialize ((game asteroids-game))
   (log:info "TSWR - Asteroids game deinit.")
 
-  (destroy-registered-screens)
-  
-  (p2de:deinit-ecs))
+  (deinitialize-game-screens)
+
+  (p2de:deinit-ecs)
+
+  ;; FIXME shouldn't be called by the game, IMO -.-
+  (p2dg::clear-font-cache))
 
 (defmethod p2d:on-key-event ((game asteroids-game) key state repeat)
   (declare (ignore game))

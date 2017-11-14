@@ -60,5 +60,10 @@
                                      (:file "animation-updater")
                                      (:file "renderer")))
                (:file "game-rules")
-               (:file "screens")
+               (:module "screens"
+                        :components ((:file "screens")
+                                     (:file "screen-menu")
+                                     (:file "screen-defeat")
+                                     (:file "screen-get-ready")
+                                     (:file "screen-main-game")))
                (:file "main")))
