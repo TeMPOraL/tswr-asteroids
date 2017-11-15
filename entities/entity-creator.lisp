@@ -48,7 +48,7 @@
     
     (p2de:add-component e 'kinematics
                         :speed-limit +default-ship-speed-limit+
-                        :rotation-speed-limit p2dm:+2pi+)
+                        :rotation-speed-limit +default-ship-rotation-speed-limit+)
     
     (p2de:add-component e 'collision-sphere
                         :radius +default-ship-size+

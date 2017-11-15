@@ -27,6 +27,7 @@
 (defparameter +default-gun-cooldown+ 0.25)
 
 (defparameter +default-ship-speed-limit+ 150.0)
+(defparameter +default-ship-rotation-speed-limit+ p2dm:+2pi+)
 
 (defparameter +triple-fire-angle-offset+ (p2dm:deg->rad 15.0))
 (defparameter +bullet-life-multiplier-buff+ 1.5)

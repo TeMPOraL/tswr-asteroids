@@ -144,25 +144,22 @@
 
 (defun count-live-asteroids ()
   (let ((total 0))
-    (maphash (lambda (id entity)
-               (declare (ignore id))
-               (when (asteroidp entity)
-                 (incf total)))
-             (p2de::entities p2de:*ecs-manager*))
+    (maphash-values (lambda (entity)
+                      (when (asteroidp entity)
+                        (incf total)))
+                    (p2de::entities p2de:*ecs-manager*))
     total))
 
 (defun get-player-ship ()
   (let (ship)
-    (maphash (lambda (id entity)
-               (declare (ignore id))
-               (when (shipp entity)
-                 (setf ship entity)))
-             (p2de::entities p2de:*ecs-manager*))
+    (maphash-values (lambda (entity)
+                      (when (shipp entity)
+                        (setf ship entity)))
+                    (p2de::entities p2de:*ecs-manager*))
     ship))
 
 
 ;;; Functions to check whether entity is of given game-rules type.
-
 (defun bulletp (entity)
   (p2de:find-component entity 'bullet))
 
@@ -177,12 +174,6 @@
 
 
 ;;; Setting up game levels
-(defun start-game ()
-  (unless (eql *game-over* :continue)
-    (clear-game-state))
-  (set-up-entities-for-level)
-  (setf *game-over* nil))
-
 (defun set-up-entities-for-level ()
   ;; Spawn some random asteroids in the vicinity of player.
   (dotimes (i (+ +initial-asteroids+ (* *current-level* +asteroids-increment-per-level+)))
@@ -207,6 +198,25 @@
           (slot-value orn 'orientation) (p2dm:random-float 0 p2dm:+2pi+)))
   (add-respawn-shield))
 
+(defun get-current-ship-buffs ()
+  (when-let ((ship (get-player-ship)))
+    (slot-value (p2de:find-component ship 'gun) 'buffs)))
+
+(defun add-respawn-shield ()
+  (setf *respawn-shield-remaining* +default-respawn-shield-duration+))
+
+(defun has-respawn-shield ()
+  (> *respawn-shield-remaining* 0))
+
+
+;;; Call these to trigger game end or progression.
+
+(defun start-game ()
+  (unless (eql *game-over* :continue)
+    (clear-game-state))
+  (set-up-entities-for-level)
+  (setf *game-over* nil))
+
 (defun game-over ()
   (log:info "Game over, restarting...")
   (p2de:schedule-all-entities-for-deletion)
@@ -221,23 +231,13 @@
 
 (defun next-level ()
   (log:info "Progressing to next level!")
-  ;; FIXME ensure ship (or at least its buffs) is saved!
   (p2de:schedule-all-entities-for-deletion)
-  (setf *last-ship-buffs* (get-current-ship-buffs))
+
+  (setf *last-ship-buffs* (get-current-ship-buffs)) ; Ensure ship buffs are carried over.
   (incf *current-level*)
+  
   (setf *game-over* :continue)
   (switch-game-screen :get-ready))
-
-(defun get-current-ship-buffs ()
-  (when-let ((ship (get-player-ship)))
-    (slot-value (p2de:find-component ship 'gun) 'buffs)))
-
-(defun add-respawn-shield ()
-  (setf *respawn-shield-remaining* +default-respawn-shield-duration+))
-
-(defun has-respawn-shield ()
-  (> *respawn-shield-remaining* 0))
-
 
 
 ;;; Related to input handling.

@@ -86,9 +86,11 @@ Some design notes to help finalize the game.
 
 **** TODO Add intro banner
 
-**** TODO Add main game screen
+**** DONE Add main game screen
+     CLOSED: [2017-11-14 Tue 21:32]
 
-**** TODO Add pause screen
+**** DONE Add pause screen
+     CLOSED: [2017-11-14 Tue 21:32]
 
 **** TODO Add blinking before decay for powerups
 
