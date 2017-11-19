@@ -72,7 +72,8 @@ Some design notes to help finalize the game.
 **** TODO Fix player ship sprite
      Make it look nicer.
 
-**** TODO Add blinking before decay for powerups
+**** DONE Add blinking before decay for powerups
+     CLOSED: [2017-11-19 Sun 18:18]
 
 **** TODO Add support for negative and random (i.e. either pos or neg) powerups
      Need to be visually different.

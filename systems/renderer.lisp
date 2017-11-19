@@ -10,7 +10,7 @@
   (position renderable))
 
 (defmethod p2de:do-system ((system renderer) entity dt)
-  (declare (ignore system dt))
+  (declare (ignore system))
   (with-slots (position) (p2de:find-component entity 'position)
     (with-slots (sprite color scale) (p2de:find-component entity 'renderable)
       ;;
@@ -23,7 +23,7 @@
           (if-let ((orientation (p2de:find-component entity 'orientation)))
             (p2dglu:rotatez* (orientation orientation)))
           (p2dglu:scale2-uniform scale)
-          (draw-pseudo-sprite sprite color))
+          (draw-pseudo-sprite sprite color dt))
 
         ;; Debug - rendering kinematics
         (when *debug-render-kinematics*
@@ -42,9 +42,9 @@
               (p2dglu:scale2-uniform (slot-value bounding-sphere 'radius))
               (p2dglu:draw-circle-outline))))))))
 
-(defun draw-pseudo-sprite (sprite color)
+(defun draw-pseudo-sprite (sprite color dt)
   "Pseudo because it's not really a `SPRITE', but rather a function wrapping immediate-mode geometry calls."
-   (funcall sprite color))
+   (funcall sprite color dt))
 
 (defun draw-vector-marker-to-point (point)
   "Draws a vector marker from (0 0) to `POINT'."
@@ -72,7 +72,8 @@
 ;;; and don't use up memory.
 
 (defun make-ship-sprite ()
-  (lambda (color)
+  (lambda (color dt)
+    (declare (ignore dt))
     (p2dglu:color4 color)
     (gl:scale 1 1.5 1)
     (p2dglu:draw-triangle-outline)
@@ -84,7 +85,8 @@
         ))))
 
 (defun make-ship-accelerating-sprite ()
-  (lambda (color)
+  (lambda (color dt)
+    (declare (ignore dt))
     (p2dglu:color4 color)
     (gl:scale 1 1.5 1)
     (p2dglu:draw-triangle-outline)
@@ -95,12 +97,14 @@
     (p2dglu:draw-triangle-outline)))
 
 (defun make-bullet-sprite ()
-  (lambda (color)
+  (lambda (color dt)
+    (declare (ignore dt))
     (p2dglu:color4 color)
     (p2dglu:draw-circle-outline :resolution 16)))
 
 (defun make-powerup-sprite ()
-  (lambda (color)
+  (lambda (color dt)
+    (declare (ignore dt))
     (p2dglu:color4 color)
     (p2dglu:rotatez* (p2dm:deg->rad 45.0))
     (p2dglu:scale2-uniform 0.75)
@@ -117,7 +121,9 @@
         (push (cons (* noise-val (cos (* step step-angle)))
                     (* noise-val (sin (* step step-angle))))
               vertex-pairs)))
-     (lambda (color)
+     (lambda (color dt)
+       (declare (ignore dt))
+
        ;; Draw black background to pretend asteroid is solid
        (p2dg:with-color (0 0 0)
          (gl:With-primitive :polygon

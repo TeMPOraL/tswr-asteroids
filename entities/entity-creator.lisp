@@ -191,6 +191,11 @@
                         :sprite (make-powerup-sprite)
                         :color (powerup-type->powerup-color type)
                         :scale +default-powerup-size+)
+
+    (p2de:add-component e 'animation
+                        :animation-type (make-blink-decay-animation)
+                        :animation-length life
+                        :looped nil)
     e))
 
 (defun powerup-type->powerup-color (powerup-type)

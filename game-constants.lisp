@@ -14,7 +14,7 @@
 (defparameter +base-asteroid-score+ 1000)
 (defparameter +asteroid-powerup-drop-chance+ 0.01)
 (defparameter +default-ship-size+ 8)
-(defparameter +default-powerup-size+ 20)
+(defparameter +default-powerup-size+ 16)
 (defparameter +default-powerup-score+ 2000)
 (defparameter +default-explosion-life+ 1.0)
 (defparameter +default-explosion-size+ 10.0)
