@@ -15,6 +15,22 @@
 
 (defvar *last-ship-buffs* '() "Store for ship buffs between level progress.")
 
+(defparameter *powerups-by-category-alist*
+  '((:positive . (:bidi-fire
+                  :triple-fire
+                  :big-bullets
+                  :longer-bullet-life
+                  :lower-cooldown
+                  :faster-bullets
+                  :1up))
+    (:negative . (:kill-ship
+                  :spawn-extra-asteroid
+                  :drop-random-gun-buff
+                  :decrease-score
+                  ;; TODO reverse controls?
+                  ;; TODO invert shooting direction?
+))))
+
 (defun clear-game-state ()
   "Clear all state related to main game and its rules."
   (setf *lives* +default-lives+
@@ -85,9 +101,11 @@
   (when-let ((position (p2de:find-component asteroid 'position))
              (powerup (p2de:find-component asteroid 'drops-powerup)))
     (when (< (p2dm:random-float) (slot-value powerup 'chance))
-      (spawn-powerup (slot-value position 'position)
-                     (pick-random-powerup-type) ;FIXME determined by asteroid
-                     +default-powerup-life+)))
+      (let ((category (pick-random-powerup-category)))
+        (spawn-powerup (slot-value position 'position)
+                       category         ;FIXME determined by asteroid
+                       (pick-powerup-type-by-category category)
+                       +default-powerup-life+))))
   
   (p2de:schedule-entity-for-deletion asteroid))
 
@@ -124,9 +142,16 @@
                             (p2dm:scaled-vector (p2dm:rotated-vector-2d (p2dm:make-vector-2d 0.0 1.0)
                                                                         (noise-up-angle (coerce (* n (/ p2dm:+2pi+ +asteroid-children+)) 'p2dm:standard-float)))
                                                 (noise-up-speed +default-asteroid-spread-speed+)))))))))
+(defun pick-random-powerup-category ()
+  (whichever :positive :negative :random))
 
-(defun pick-random-powerup-type ()
-  (whichever :bidi-fire :triple-fire :big-bullets :longer-bullet-life :lower-cooldown :faster-bullets :1up))
+(defun pick-powerup-type-by-category (category)
+  (let* ((actual-category (if (eq category :random)
+                              (whichever :positive :negative)
+                              category))
+         (types (cdr (assoc actual-category *powerups-by-category-alist*))))
+    (elt types
+         (random (length types)))))
 
 
 ;;; Some generic stuff

@@ -167,7 +167,7 @@
 
 ;;; Powerups
 
-(defun spawn-powerup (position type life)
+(defun spawn-powerup (position category type life)
   (let ((e (p2de:make-entity)))
     (p2de:add-component e 'position
                         :position position)
@@ -188,8 +188,8 @@
                         :score +default-powerup-score+)
     
     (p2de:add-component e 'renderable
-                        :sprite (make-powerup-sprite)
-                        :color (powerup-type->powerup-color type)
+                        :sprite (make-powerup-sprite (powerup-category->letter category))
+                        :color (powerup-category->color category)
                         :scale +default-powerup-size+)
 
     (p2de:add-component e 'animation
@@ -198,10 +198,20 @@
                         :looped nil)
     e))
 
-(defun powerup-type->powerup-color (powerup-type)
-  "Get appropriate color for `POWERUP-TYPE'."
-  (declare (ignore powerup-type))       ;TODO actually use it
-  (p2dg:make-color-4 1.0 1.0 0.0 1.0))
+(defun powerup-category->color (category)
+  (case category
+    (:positive (p2dg:make-color-4 0.3 1.0 0.3 1.0))
+    (:negative (p2dg:make-color-4 1.0 0.3 0.3 1.0))
+    (:random (p2dg:make-color-4 1.0 0.3 1.0 1.0))
+    (otherwise (p2dg:make-color-4 1.0 0.0 0.0 1.0))))
+
+(defun powerup-category->letter (category)
+  (case category
+    (:positive #\+)
+    (:negative #\-)
+    (:random #\?)
+    (otherwise #\!)))
+
 
 
 ;;; FX
@@ -233,8 +243,10 @@
                                       (+ 5.0 (random 100.0)))))
 
 (defun debug-spawn-powerup ()
-  (spawn-powerup (p2dm:make-vector-2d (random (float p2d:*canvas-width*)) (random (float p2d:*canvas-height*)))
-                 (pick-random-powerup-type)
-                 10.0))
+  (let ((category (pick-random-powerup-category)))
+    (spawn-powerup (p2dm:make-vector-2d (random (float p2d:*canvas-width*)) (random (float p2d:*canvas-height*)))
+                   category
+                   (pick-powerup-type-by-category category)
+                   10.0)))
 
 

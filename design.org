@@ -54,7 +54,6 @@ Some design notes to help finalize the game.
 **** DONE 1-up powerup
      CLOSED: [2017-01-29 nie 15:19]
 
-
 *** <2017-02-13 pon>--<2017-02-19 nie>
     Didn't do much.
 
@@ -75,10 +74,12 @@ Some design notes to help finalize the game.
 **** DONE Add blinking before decay for powerups
      CLOSED: [2017-11-19 Sun 18:18]
 
-**** TODO Add support for negative and random (i.e. either pos or neg) powerups
+**** DONE Add support for negative and random (i.e. either pos or neg) powerups
+     CLOSED: [2017-11-19 Sun 20:52]
      Need to be visually different.
 
-**** TODO Add graphics for powerups that would let you distinguish between them
+**** DONE Add graphics for powerups that would let you distinguish between them
+     CLOSED: [2017-11-19 Sun 20:52]
      Maybe something simple / with color. Since we have text capabilities now, we can draw letters instead / in addition of
      of the yellow triangle.
 
