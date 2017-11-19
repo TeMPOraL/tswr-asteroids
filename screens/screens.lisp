@@ -59,7 +59,8 @@ the last screen for the whole game."))
                                         :next-screen :main-game))
           (:defeat . ,(make-instance 'defeat-screen
                                      :next-screen :menu))
-          (:main-game . ,(make-instance 'main-game-screen))))
+          (:main-game . ,(make-instance 'main-game-screen))
+          (:sandbox . ,(make-instance 'sandbox-screen))))
 
   (mapc (lambda (entry)
           (log:debug "Creating game screen" entry)

@@ -3,7 +3,6 @@
 
 Some design notes to help finalize the game.
 
-
 * Roadmap / plan
 
 ** Schedule
@@ -60,31 +59,9 @@ Some design notes to help finalize the game.
     Didn't do much.
 
 *** <2017-02-20 pon>--<2017-02-26 nie>
-**** TODO Add support for negative and random (i.e. either pos or neg) powerups
-     Need to be visually different.
+    Didn't do much either.
 
-**** TODO Add graphics for powerups that would let you distinguish between them
-     Maybe something simple / with color. Since we have text capabilities now, we can draw letters instead / in addition of
-     of the yellow triangle.
-
-**** TODO All asteroids killed = spawn new (more)
-     Add a ramping-up difficulty
-
-**** CANCELLED Implement laser (maybe reconsider if not out of scope?)
-     CLOSED: [2017-02-23 czw 02:47]
-     - State "CANCELLED"  from "TODO"       [2017-02-23 czw 02:47] \\
-       Declared out of scope for now.
-
-**** TODO Find some sounds and add them
-     - [ ] bullet shot
-     - [ ] triple shot
-     - [ ] asteroid hit
-     - [ ] powerup collected
-     - [ ] ship destroyed
-
-**** TODO Think of aesthetics you could use for the game
-
-**** TODO Add intro banner
+*** <2017-11-13 Mon>--<2017-11-20 Mon>
 
 **** DONE Add main game screen
      CLOSED: [2017-11-14 Tue 21:32]
@@ -92,12 +69,60 @@ Some design notes to help finalize the game.
 **** DONE Add pause screen
      CLOSED: [2017-11-14 Tue 21:32]
 
+**** TODO Fix player ship sprite
+     Make it look nicer.
+
 **** TODO Add blinking before decay for powerups
+
+**** TODO Add support for negative and random (i.e. either pos or neg) powerups
+     Need to be visually different.
+
+**** TODO Add graphics for powerups that would let you distinguish between them
+     Maybe something simple / with color. Since we have text capabilities now, we can draw letters instead / in addition of
+     of the yellow triangle.
+
+**** TODO Add a health bar for player; try out the Tess version of gameplay
+     Also: when shield is active, you can draw it in a different (blue?) color, with words SHIELD, or sth.
+
+**** DONE Add stars in the background
+     CLOSED: [2017-11-19 Sun 16:30]
+
+**** CANCELLED(c@/! All asteroids killed = spawn new (more)
+     CLOSED: [2017-11-15 Wed 19:02]
+     Add a ramping-up difficulty
+
+     I don't even remember what was that supposed to be.
+
+**** CANCELLED Implement laser (maybe reconsider if not out of scope?)
+     CLOSED: [2017-02-23 czw 02:47]
+     - State "CANCELLED"  from "TODO"       [2017-02-23 czw 02:47] \\
+       Declared out of scope for now.
+
+**** CANCELLED(c@/! Add intro banner
+     CLOSED: [2017-11-15 Wed 19:03]
+     Main Menu is good enough.
 
 ** Task staging ground
    I.e. unscheduled yet.
 
+*** TODO Particle trail behind the ship
+
+*** TODO (consider) Particle-based explosions?
+
+*** TODO (to consider) Asteroid health
+    Either implicit, or displayed as small cracks on the object
+
+*** TODO Find some sounds and add them
+    - [ ] bullet shot
+    - [ ] triple shot
+    - [ ] asteroid hit
+    - [ ] powerup collected
+    - [ ] ship destroyed
+
+*** TODO Think of aesthetics you could use for the game
+
 *** TODO Try out continuously spawning asteroids instead
+    Whatever that means. Like, infinite game / no levels?
 
 *** TODO Implement explosive bullets
     New system type: explosion-expander; sole role is increasing collision radius (and sprite

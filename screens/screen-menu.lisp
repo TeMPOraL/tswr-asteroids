@@ -48,6 +48,10 @@
         (on-key-down :scancode-return
                      (activate-option))
 
+        ;; hidden dev feature
+        (on-key-down :scancode-f1
+                     (switch-game-screen :sandbox))
+
         ;; FIXME XXX (sdl2:push-event :quit) seems like too direct
         ;;           a call; needs a proper engine-provided function
         (on-key-down :scancode-escape
@@ -64,7 +68,7 @@
                :font +bold-font+
                :size 72
                :x 400
-               :y 400
+               :y +layout-title-y-centerline+
                :alignment-x :center
                :alignment-y :center)
 
@@ -77,6 +81,7 @@
                               +default-font+)
                        :size (if selectedp 18 16)
                        :x 400
-                       :y (- 200 (* i 50))
+                       :y (- +layout-secondary-first-centerline+
+                             (* i 50))
                        :alignment-x :center)))))
 

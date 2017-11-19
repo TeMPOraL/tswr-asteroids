@@ -7,9 +7,9 @@
 (defparameter +asteroids-increment-per-level+ 2)
 (defparameter +starting-asteroid-size+ 48)
 (defparameter +default-powerup-life+ 7)
-(defparameter +asteroid-children+ 4 "How many pieces an asteroids splits into.")
+(defparameter +asteroid-children+ 2 "How many pieces an asteroids splits into.")
 (defparameter +minimum-asteroid-size+ 10 "We don't spawn asteroids smaller than this.")
-(defparameter +default-asteroid-spread-speed+ 20 "Speed at which asteroids spread out.")
+(defparameter +default-asteroid-spread-speed+ 30 "Speed at which asteroids spread out.")
 
 (defparameter +base-asteroid-score+ 1000)
 (defparameter +asteroid-powerup-drop-chance+ 0.01)

@@ -15,6 +15,6 @@
     (draw-text "GET READY!"
                :size 72
                :x 400
-               :y 300
+               :y +layout-title-y-centerline+
                :alignment-x :center)))
 

@@ -7,6 +7,11 @@
 (defparameter +default-text-size+ 10)
 
 
+;;; Layout constants
+(defparameter +layout-title-y-centerline+ 400)
+(defparameter +layout-secondary-first-centerline+ 250)
+
+
 
 ;;; XXX NOTE development code hacking away with engine's internals.
 (defun draw-text (text &key (font +default-font+) (size +default-text-size+) (x 0.0) (y 0.0) (alignment-x :left) (alignment-y :center))

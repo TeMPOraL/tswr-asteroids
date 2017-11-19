@@ -67,7 +67,7 @@
     (p2de:add-component e 'player-controlled)
     
     (p2de:add-component e 'renderable
-                        :sprite :ship-accelerating
+                        :sprite (make-ship-accelerating-sprite)
                         :color (p2dg:make-color-4 1.0 1.0 0.0 1.0)
                         :scale +default-ship-size+)
     e))
@@ -142,7 +142,7 @@
                              :life-remaining (* life-multiplier 0.5)) ;FIXME (life) magic, bullet-type dependent
     
          (p2de:add-component e 'renderable
-                             :sprite :huge-bullet
+                             :sprite :huge-bullet ;TODO repace
                              :color (p2dg:make-color-4 1.0 0.0 1.0 1.0) ;TODO different types = different colors
                              :scale (* size-multiplier 4.0) ;FIXME (size) magic, bullet-type dependent
                              )
@@ -157,7 +157,7 @@
                              :life-remaining (* life-multiplier +default-bullet-life+))
     
          (p2de:add-component e 'renderable
-                             :sprite :bullet
+                             :sprite (make-bullet-sprite)
                              :color (p2dg:make-color-4 1.0 0.0 0.0 1.0) ;TODO different types = different colors
                              :scale (* size-multiplier +default-bullet-size+)
                              )
@@ -188,7 +188,7 @@
                         :score +default-powerup-score+)
     
     (p2de:add-component e 'renderable
-                        :sprite :powerup
+                        :sprite (make-powerup-sprite)
                         :color (powerup-type->powerup-color type)
                         :scale +default-powerup-size+)
     e))

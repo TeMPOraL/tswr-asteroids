@@ -6,14 +6,17 @@
 
 (defclass main-game-screen (game-screen)
   ((paused-p :initform nil
-             :accessor main-game-paused-p)))
+             :accessor main-game-paused-p)
+   (starfield :initform nil
+              :accessor main-game-starfield)))
 
 
 
 (defmethod on-phase-in :before ((screen main-game-screen) previous-screen)
   (declare (ignore previous-screen))
   ;; generic game initialization
-  (setf (main-game-paused-p screen) nil))
+  (setf (main-game-paused-p screen) nil)
+  (setf (main-game-starfield screen) (make-starfield 200)))
 
 (defmethod on-phase-in ((screen main-game-screen) (previous-screen get-ready-screen))
   ;; TODO additional initialization - clear score, et al.
@@ -62,8 +65,9 @@
 
 (defmethod on-render ((screen main-game-screen) dt)
   ;; draw stuff
+  (draw-starfield (main-game-starfield screen))
 
-  ;; XXX that we don't hav to condition this out on pause
+  ;; XXX that we don't have to condition this out on pause
   ;; XXX is only because of accident - the only :frame system
   ;; XXX we use is the rendering system.
   (p2de:tick-frame-systems dt) ;FIXME why it's here and not in on-idle??
@@ -74,13 +78,15 @@
   (p2dg:with-color (0 1 0)
     (draw-text (format nil "~10D" (floor *score*))
                :font +bold-font+
+               :size 12
                :x 790
-               :y 580
+               :y 585
                :alignment-x :right))
   (p2dg:with-color (1 1 1)
     (draw-text (format nil "High score: ~10D" (floor *high-score*))
+               :size 12
                :x 790
-               :y 560
+               :y 570
                :alignment-x :right))
 
   ;; Lives
@@ -98,15 +104,16 @@
       (draw-text "PAUSED"
                  :size 72
                  :x 400
-                 :y 300
+                 :y +layout-title-y-centerline+
                  :alignment-x :center)
       (draw-text "Press Q to quit to main menu."
                  :size 16
                  :x 400
-                 :y 250
+                 :y +layout-secondary-first-centerline+
                  :alignment-x :center)
       (draw-text "Press ESC to unpause."
                  :size 16
                  :x 400
-                 :y 230
+                 :y (- +layout-secondary-first-centerline+
+                       20)
                  :alignment-x :center))))
