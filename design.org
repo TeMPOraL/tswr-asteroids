@@ -107,6 +107,16 @@ Some design notes to help finalize the game.
 ** Task staging ground
    I.e. unscheduled yet.
 
+*** TODO consider temporary powerups
+    I.e. (some) powerups actually decay after a bunch of seconds, and are also
+    displayed in the UI. That would allow for increasing the amount of
+    powerups dropped, make the positive one less game-breaking, and negative
+    ones less annoying.
+
+*** TODO Implement some negative powerups
+    - [ ] losing score
+    - [ ] something slowing down the ship or controls?
+
 *** TODO Particle trail behind the ship
 
 *** TODO (consider) Particle-based explosions?

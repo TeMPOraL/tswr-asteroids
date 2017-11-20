@@ -81,13 +81,15 @@
                :size 12
                :x 790
                :y 585
-               :alignment-x :right))
+               :alignment-x :right
+               :transient t))
   (p2dg:with-color (1 1 1)
     (draw-text (format nil "High score: ~10D" (floor *high-score*))
                :size 12
                :x 790
                :y 570
-               :alignment-x :right))
+               :alignment-x :right
+               :transient t))
 
   ;; Lives
   (p2dg:with-color (1 1 0)

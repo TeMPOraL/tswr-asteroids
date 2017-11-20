@@ -59,6 +59,7 @@
   (p2de:deinit-ecs)
 
   ;; FIXME shouldn't be called by the game, IMO -.-
+  (clear-magic-text-cache)
   (p2dg::clear-font-cache))
 
 (defmethod p2d:on-key-event ((game asteroids-game) key state repeat)
