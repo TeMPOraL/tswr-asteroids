@@ -39,6 +39,7 @@
              (unless transient
                (setf (gethash (key) *magic-text-cache*) what))
              what))
+    ;; Not sure if those declarations are really useful; doesn't seem to do much under SBCL and default compilation.
     (declare (dynamic-extent (function render-text) (function key) (function get-from-cache) (function maybe-store-in-cache)))
 
     (let ((rendered-text (or (get-from-cache)
@@ -61,5 +62,11 @@
             (p2dg::%draw rendered-text)))
 
         (when transient
+          (p2dprof:count-value 1
+                               'draw-text-transient
+                               :description "no. of times a text is drawn without caching, per frame"
+                               :interval :frame
+                               :history-size 120)
+          
           (p2dg::%free-text rendered-text))))))
 

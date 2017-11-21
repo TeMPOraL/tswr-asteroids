@@ -74,6 +74,12 @@
   (declare (ignore game))
   ;; Nothing to do for now.
   (on-idle *current-game-screen* dt)
+
+  (p2dprof:count-value (hash-table-count *magic-text-cache*)
+                       'text-cache-size
+                       :description "no. of entries in text cache this frame"
+                       :interval :frame
+                       :history-size 120)
   
   (p2dprof:count-value (hash-table-count (p2de::entities p2de:*ecs-manager*))
                        'ecs-entities
