@@ -3,3 +3,9 @@
 
 A test game for initial development of the [[https://github.com/TeMPOraL/parendeck2d][Parendeck 2D engine]].
 
+[[file:screenshots/2017-11-21-wip.png]]
+
+The game is playable, if not entirely balanced. I keep adding new features as means
+of discovering things that need to be incorporated into Parendeck 2D engine.
+
+See [[file:design.org]] for development notes.
